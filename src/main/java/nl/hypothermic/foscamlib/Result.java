@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib;
 
+/** ------------------------ **\
+ * > Result.java			< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
+
 public enum Result {
 	
 	// ----- Foscam CGI results ----- //

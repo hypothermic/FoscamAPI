@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib;
 
+/** ------------------------ **\
+ * > RxData.java			< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
+
 public class RxData {
 	
 	public final Result result;

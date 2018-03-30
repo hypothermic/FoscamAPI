@@ -1,4 +1,10 @@
-package nl.hypothermic.foscamlib;
+package nl.hypothermic.foscamlib.containers;
+
+/** ------------------------ **\
+ * > Credentials.java		< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
 
 public class Credentials {
 	

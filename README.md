@@ -13,7 +13,7 @@ camera.setSharpness(90);
 ```
 
 ## Features
-Here is a full list of commands (sorted by relevancy):
+Here is a full list of commands:
 
 ```java
 // Image settings
@@ -30,6 +30,7 @@ Here is a full list of commands (sorted by relevancy):
 - setFlipped(true/false);
 
 // Networking
+- isDHCP();
 - getIP();
 - getNetworkGateway();
 - getNetworkMask();
@@ -37,6 +38,7 @@ Here is a full list of commands (sorted by relevancy):
 - getNetworkDNSSecondary();
 - getURL();
 - getInterfaceURL();
+
 - getPortInfo();
     - getWebPort();
     - getMediaPort();
@@ -46,12 +48,35 @@ Here is a full list of commands (sorted by relevancy):
 - setPortInfo(PortInfo);
 - doesCameraSupportOnvif();
 - doesCameraSupportRtsp();
-- isDHCP();
+
 - isUPnPEnabled();
 - setUPNP(true/false);
+
+- isP2PEnabled();
+- setP2P();
+- getP2PPort();
+- setP2PPort();
+
+- getFTPConfig();
+- setFTPConfig(FTPConfig);
+
+// Camera controls
+- openInfraLed();
+- closeInfraLed();
+- getInfraLedMode();
+- setInfraLedMode(0-1);
+
+// Camera info
+- getName();
+- setName("MyCamera");
 ```
 
 ## Changelog
+v1.02
+- Added FTP configuration controls
+- Added Infrared light and config controls
+- Added getName and setName
+
 v1.01
 - Added PortInfo and port getters
 - Added get/set for UPnP

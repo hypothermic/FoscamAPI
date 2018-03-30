@@ -3,9 +3,15 @@ package nl.hypothermic.foscamlib.net;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-import nl.hypothermic.foscamlib.Credentials;
 import nl.hypothermic.foscamlib.Result;
 import nl.hypothermic.foscamlib.RxData;
+import nl.hypothermic.foscamlib.containers.Credentials;
+
+/** ------------------------ **\
+ * > NetManager.java		< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
 
 public class NetManager {
 	
@@ -128,9 +134,9 @@ public class NetManager {
 		Result deferr = Result.UNKNOWNERR;
 		try {
 			String xml = x.get(addr + "cmd=" + URLEncoder.encode(command) + "&"
-								+ URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value)
-								+ URLEncoder.encode(param2name) + "=" + URLEncoder.encode(param2value)
-								+ URLEncoder.encode(param3name) + "=" + URLEncoder.encode(param3value)
+								+ URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value) + "&"
+								+ URLEncoder.encode(param2name) + "=" + URLEncoder.encode(param2value) + "&"
+								+ URLEncoder.encode(param3name) + "=" + URLEncoder.encode(param3value) + "&"
 								+ URLEncoder.encode(param4name) + "=" + URLEncoder.encode(param4value)
 								+ "&usr=" + creds.user + "&pwd=" + creds.password);
 			deferr = p.getResult(xml);
@@ -164,10 +170,10 @@ public class NetManager {
 		Result deferr = Result.UNKNOWNERR;
 		try {
 			String xml = x.get(addr + "cmd=" + URLEncoder.encode(command) + "&"
-								+ URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value)
-								+ URLEncoder.encode(param2name) + "=" + URLEncoder.encode(param2value)
-								+ URLEncoder.encode(param3name) + "=" + URLEncoder.encode(param3value)
-								+ URLEncoder.encode(param4name) + "=" + URLEncoder.encode(param4value)
+								+ URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value) + "&"
+								+ URLEncoder.encode(param2name) + "=" + URLEncoder.encode(param2value) + "&"
+								+ URLEncoder.encode(param3name) + "=" + URLEncoder.encode(param3value) + "&"
+								+ URLEncoder.encode(param4name) + "=" + URLEncoder.encode(param4value) + "&"
 								+ URLEncoder.encode(param5name) + "=" + URLEncoder.encode(param5value)
 								+ "&usr=" + creds.user + "&pwd=" + creds.password);
 			deferr = p.getResult(xml);

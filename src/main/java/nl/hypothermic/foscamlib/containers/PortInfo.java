@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/** ------------------------ **\
+ * > PortInfo.java			< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
+
 public class PortInfo {
 	
 	// Store ports in Strings, not in ints, because we will send them in String format as well.

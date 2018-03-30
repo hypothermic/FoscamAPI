@@ -2,11 +2,19 @@ package nl.hypothermic.foscamlib;
 
 import java.net.URLEncoder;
 
+import nl.hypothermic.foscamlib.containers.Credentials;
+import nl.hypothermic.foscamlib.containers.FTPConfig;
 import nl.hypothermic.foscamlib.containers.PortInfo;
 import nl.hypothermic.foscamlib.exception.ConnectException;
 import nl.hypothermic.foscamlib.net.NetExecutor;
 import nl.hypothermic.foscamlib.net.NetManager;
 import nl.hypothermic.foscamlib.net.NetParser;
+
+/** ------------------------ **\
+ * > Foscam.java			< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
 
 public class Foscam {
 
@@ -440,8 +448,6 @@ public class Foscam {
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
-		System.out.println(out.xml);
-		System.out.println(p.getTagValue(out.xml, "isEnable"));
 		return p.getTagValue(out.xml, "isEnable").contains("1");
 	}
 	
@@ -457,6 +463,181 @@ public class Foscam {
 			upnpstate = 0;
 		}
 		RxData out = nm.exec("setUPnPConfig", "isEnable", upnpstate + "");
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Set Foscam's FTP config
+	 * @return True if succeeded
+	 */
+	public Boolean setFTPConfig(FTPConfig ftpc) {
+		RxData out = nm.exec("setFtpConfig", "ftpAddr", ftpc.ftpAddr,
+											 "ftpPort", ftpc.ftpPort,
+											 "mode", ftpc.mode,
+											 "userName", ftpc.userName,
+											 "password", ftpc.password);
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Test Foscam's FTP config (experimental, use at own risk)
+	 * @return True if succeeded, false if not succeeded, null if http-get not succeeded or invalid.
+	 */
+	public Boolean testFTPConfig(FTPConfig ftpc) {
+		RxData out = nm.exec("testFtpConfig", "ftpAddr", ftpc.ftpAddr,
+											 "ftpPort", ftpc.ftpPort,
+											 "mode", ftpc.mode,
+											 "userName", ftpc.userName,
+											 "password", ftpc.password);
+		if (out.result != Result.SUCCESS) {
+			// This is the result of the post
+			return null;
+		}
+		if (!out.xml.contains("testResult")) {
+			return null;
+		}
+			// This is the result of the test
+		return p.getTagValue(out.xml, "testResult").contains("0");
+	}
+	
+	/** 
+	 * Get Foscam's FTP config
+	 * @return FTPConfig object, null if not succeeded.
+	 */
+	public FTPConfig getFTPConfig() {
+		RxData out = nm.exec("getFtpConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new FTPConfig(p.getTagValue(out.xml, "ftpAddr"), p.getTagValue(out.xml, "ftpPort"), p.getTagValue(out.xml, "mode"), p.getTagValue(out.xml, "userName"), p.getTagValue(out.xml, "password"));
+	}
+	
+	/** 
+	 * Check if Foscam's P2P is enabled
+	 * @return This Foscam's P2P status as Boolean (null if none)
+	 */
+	public Boolean isP2PEnabled() {
+		RxData out = nm.exec("getP2PEnable");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "enable").contains("1");
+	}
+	
+	/** 
+	 * Set Foscam's P2P state
+	 * @return True if succeeded
+	 */
+	public Boolean setP2P(boolean state) {
+		int p2pstate;
+		if (state) {
+			p2pstate = 1;
+		} else {
+			p2pstate = 0;
+		}
+		RxData out = nm.exec("setP2PEnable", "enable", p2pstate + "");
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get Foscam's P2P port
+	 * @return True if succeeded
+	 */
+	public String getP2PPort(String value) {
+		RxData out = nm.exec("getP2PPort");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "port");
+	}
+	
+	/** 
+	 * Set Foscam's P2P port
+	 * @return True if succeeded
+	 */
+	public Boolean setP2PPort(String value) {
+		RxData out = nm.exec("setP2PPort", "port", value + "");
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Force open Foscam's infra LED
+	 * @return True if succeeded, false is not succeeded, null if error in http-get
+	 */
+	public Boolean openInfraLed() {
+		RxData out = nm.exec("openInfraLed");
+		if (out.result != Result.SUCCESS) {
+			// This is the result of the post
+			return null;
+		}
+		if (!out.xml.contains("ctrlResult")) {
+			return null;
+		}
+			// This is the result of the test
+		return p.getTagValue(out.xml, "ctrlResult").contains("0");
+	}
+	
+	/** 
+	 * Force close Foscam's infra LED
+	 * @return True if succeeded, false is not succeeded, null if error in http-get
+	 */
+	public Boolean closeInfraLed() {
+		RxData out = nm.exec("closeInfraLed");
+		if (out.result != Result.SUCCESS) {
+			// This is the result of the post
+			return null;
+		}
+		if (!out.xml.contains("ctrlResult")) {
+			return null;
+		}
+			// This is the result of the test
+		return p.getTagValue(out.xml, "ctrlResult").contains("0");
+	}
+	
+	/** 
+	 * Get Foscam's infra led mode
+	 * @return "0" for auto or "1" for manual if succeeded, otherwise null
+	 */
+	public String getInfraLedMode() {
+		RxData out = nm.exec("getInfraLedConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "mode");
+	}
+	
+	/** 
+	 * Set Foscam's infra led mode
+	 * @param mode 0 for auto or 1 for manual
+	 * @return True if succeeded
+	 */
+	public Boolean setInfraLedMode(int mode) {
+		if (mode < 0 || mode > 1) {
+			return null;
+		}
+		RxData out = nm.exec("setInfraLedConfig", "mode", mode + "");
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get Foscam's infra led mode
+	 * @return "0" for auto or "1" for manual if succeeded, otherwise null
+	 */
+	public String getName() {
+		RxData out = nm.exec("getDevName");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "devName");
+	}
+	
+	/** 
+	 * Set Foscam's infra led mode
+	 * @param mode 0 for auto or 1 for manual
+	 * @return True if succeeded
+	 */
+	public Boolean setName(String value) {
+		RxData out = nm.exec("setDevName", "devName", value);
 		return out.result == Result.SUCCESS;
 	}
 	

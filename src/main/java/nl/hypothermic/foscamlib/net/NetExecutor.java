@@ -8,6 +8,12 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+/** ------------------------ **\
+ * > NetExecutor.java		< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\** ------------------------ **/
+
 public class NetExecutor {
 
 	/** Construct a NetExecutor */
