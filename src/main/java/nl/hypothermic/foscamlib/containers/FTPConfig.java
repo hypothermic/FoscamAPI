@@ -2,11 +2,11 @@ package nl.hypothermic.foscamlib.containers;
 
 import java.net.URLEncoder;
 
-/** ------------------------ **\
+/******************************\
  * > FTPConfig.java			< *
  * FoscamLib by hypothermic	  *
  * www.github.com/hypothermic *
-\** ------------------------ **/
+\******************************/
 
 public class FTPConfig {
 	

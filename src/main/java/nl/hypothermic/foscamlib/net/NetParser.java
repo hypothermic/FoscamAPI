@@ -2,11 +2,11 @@ package nl.hypothermic.foscamlib.net;
 
 import nl.hypothermic.foscamlib.Result;
 
-/** ------------------------ **\
+/******************************\
  * > NetParser.java			< *
  * FoscamLib by hypothermic	  *
  * www.github.com/hypothermic *
-\** ------------------------ **/
+\******************************/
 
 public class NetParser {
 

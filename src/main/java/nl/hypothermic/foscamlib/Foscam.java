@@ -1,8 +1,11 @@
 package nl.hypothermic.foscamlib;
 
+import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import nl.hypothermic.foscamlib.containers.Credentials;
+import nl.hypothermic.foscamlib.containers.DeviceInfo;
 import nl.hypothermic.foscamlib.containers.FTPConfig;
 import nl.hypothermic.foscamlib.containers.PortInfo;
 import nl.hypothermic.foscamlib.exception.ConnectException;
@@ -10,11 +13,11 @@ import nl.hypothermic.foscamlib.net.NetExecutor;
 import nl.hypothermic.foscamlib.net.NetManager;
 import nl.hypothermic.foscamlib.net.NetParser;
 
-/** ------------------------ **\
+/******************************\
  * > Foscam.java			< *
  * FoscamLib by hypothermic	  *
  * www.github.com/hypothermic *
-\** ------------------------ **/
+\******************************/
 
 public class Foscam {
 
@@ -24,6 +27,7 @@ public class Foscam {
 	private Credentials creds;
 	private final NetParser p = new NetParser();
 	private final NetManager nm;
+	private final NetExecutor x;
 
 	/** Connect to a Foscam without HTTPS
 	 * @param address
@@ -47,12 +51,13 @@ public class Foscam {
 	public Foscam(String address, int port, String user, String password, boolean https) throws ConnectException {
 		// Check if address is valid and if device is active
 		this.creds = new Credentials(URLEncoder.encode(user), URLEncoder.encode(password));
+		x = new NetExecutor();
 		if (https) {
 			this.protocol = "https";
-			nm = new NetManager(new NetExecutor(), p, "https://" + address + ":" + port, this.creds);
+			nm = new NetManager(x, p, "https://" + address + ":" + port, this.creds);
 		} else {
 			this.protocol = "http";
-			nm = new NetManager(new NetExecutor(), p, "http://" + address + ":" + port, this.creds);
+			nm = new NetManager(x, p, "http://" + address + ":" + port, this.creds);
 		}
 		Result testres = nm.testconn();
 		if (testres == Result.INVALID_ADDRESS || testres == Result.INVALID_RESPONSE) {
@@ -273,9 +278,10 @@ public class Foscam {
 	/** 
 	 * Get if this Foscam supports onvif.
 	 * @return True if camera supports onvif and false if it doesn't.
+	 * @deprecated see the official method: isOnvifSupported()
 	 */
 	public Boolean doesCameraSupportOnvif() {
-		RxData out = nm.exec("getPortInfo");
+		/*RxData out = nm.exec("getPortInfo");
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
@@ -284,16 +290,18 @@ public class Foscam {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
+		return this.isOnvifSupported();
 	}
 	
 	/** 
 	 * Get if this Foscam supports RTSP.
 	 * Warning: RTSP is not listed inside of the CGI docs. Use with caution!
 	 * @return True if camera supports onvif and false if it doesn't.
+	 * @deprecated renamed to isRtspSupported()
 	 */
 	public Boolean doesCameraSupportRtsp() {
-		RxData out = nm.exec("getPortInfo");
+		/*RxData out = nm.exec("getPortInfo");
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
@@ -301,7 +309,8 @@ public class Foscam {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
+		return this.isRtspSupported();
 	}
 	
 	/** 
@@ -639,6 +648,360 @@ public class Foscam {
 	public Boolean setName(String value) {
 		RxData out = nm.exec("setDevName", "devName", value);
 		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Snap a picture and get raw jpeg data (experimental)
+	 * @return Raw jpeg image data.
+	 * @throws IOException 
+	 */
+	// Don't use nm.exec for this one, we want raw data.
+	public String snapPicture() throws IOException {
+		return x.get(nm.addr + "cmd=" + URLEncoder.encode("snapPicture2") + "&usr=" + creds.user + "&pwd=" + creds.password);
+	}
+	
+	/** 
+	 * Reboot the camera
+	 * @return True if reboot initiated
+	 */
+	public Boolean rebootSystem() {
+		RxData out = nm.exec("rebootSystem");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Restore to Factory Settings (untested, because I don't want to reset my camera :P)
+	 * @return True if restore initiated
+	 */
+	public Boolean restoreToFactorySettings() {
+		RxData out = nm.exec("restoreToFactorySetting");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Export camera's settings into a file
+	 * @return True if export initiated
+	 */
+	public Boolean exportConfig() {
+		RxData out = nm.exec("exportConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/**
+	 * Default URL to the exported config.
+	 * @return URL in a String.
+	 */
+	public String exportedConfigURL() {
+		return protocol + "://" + address + ":" + port + "/configs/export/configs.bin";
+	}
+	
+	/**
+	 * Get log entries
+	 * @return URL in a String.
+	 */
+	public ArrayList<String> getLogEntries(int count, int offset) {
+		// See limitations in user guide.
+		if (offset < 0 || offset > 980 || count < 1 || count > 19) {
+			return null;
+		}
+		RxData out = nm.exec("getLog", "offset", "0",
+									   "count", "0");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		ArrayList list = new ArrayList<String>();
+		count = Integer.parseInt(p.getTagValue(out.xml, "curCnt").trim());
+		while (count > 0) {
+			// Subtract before use because our log starts at 0.
+			count--;
+			list.add(p.getTagValue(out.xml, "log" + count));
+		}		
+		return list;
+	}
+	
+	/** 
+	 * Get Foscam's device info
+	 * @return DeviceInfo object
+	 */
+	public DeviceInfo getDeviceInfo() {
+		RxData out = nm.exec("getDevInfo");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new DeviceInfo(p.getTagValue(out.xml, "productName"), p.getTagValue(out.xml, "serialNo"), p.getTagValue(out.xml, "devName"),
+							  p.getTagValue(out.xml, "mac"), p.getTagValue(out.xml, "year"), p.getTagValue(out.xml, "mon"),
+							  p.getTagValue(out.xml, "day"), p.getTagValue(out.xml, "hour"), p.getTagValue(out.xml, "min"), p.getTagValue(out.xml, "sec"),
+							  p.getTagValue(out.xml, "timeZone"), p.getTagValue(out.xml, "firmwareVer"), p.getTagValue(out.xml, "hardwareVer"));
+	}
+	
+	/** 
+	 * Get Foscam's product model
+	 * @return Camera model number
+	 */
+	public String getProductModel() {
+		RxData out = nm.exec("getProductModel");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "model");
+	}
+	
+	/** 
+	 * Get Foscam's product model name
+	 * @return Camera model name
+	 */
+	public String getProductModelName() {
+		RxData out = nm.exec("getProductModelName");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "modelName");
+	}
+	
+	/** 
+	 * Get Foscam's product language
+	 * @return Camera main language
+	 */
+	public String getProductLanguage() {
+		RxData out = nm.exec("getProductLanguage");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "language");
+	}
+	
+	/** 
+	 * Get Foscam's product sensor type
+	 * @return Camera sensor type number
+	 */
+	public String getProductSensorType() {
+		RxData out = nm.exec("getProductSensorType");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "sensorType");
+	}
+	
+	/** 
+	 * Get Foscam's product wifi type
+	 * @return Camera wifi type number
+	 */
+	public String getProductWifiType() {
+		RxData out = nm.exec("getProductWifiType");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "wifiType");
+	}
+	
+	/** 
+	 * Test if camera supports SD card.
+	 * @return Whether camera supports SD card
+	 */
+	public Boolean isSdcardSupported() {
+		RxData out = nm.exec("getProductSdFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "sdFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if camera is outdoor machine.
+	 * @return Whether camera is outdoor machine
+	 */
+	public Boolean isProductOutdoorModel() {
+		RxData out = nm.exec("getProductOutdoorFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "OutdoorFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if camera is pt machine.
+	 * @return Whether camera is pt machine
+	 */
+	public Boolean isProductPtModel() {
+		RxData out = nm.exec("getProductPtFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "ptFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if camera is zoom machine.
+	 * @return Whether camera is zoom machine
+	 */
+	public Boolean isProductZoomModel() {
+		RxData out = nm.exec("getProductZoomFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "zoomFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if rs485 is supported
+	 * @return Whether rs485 is supported
+	 */
+	public Boolean isRs485Supported() {
+		RxData out = nm.exec("getProductRs485Flag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "rs485Flag").contains("1");
+	}
+	
+	/** 
+	 * Test if IO alarm is supported
+	 * @return Whether IO alarm is supported
+	 */
+	public Boolean isIoAlarmSupported() {
+		RxData out = nm.exec("getProductIoAlarmFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "ioAlarmFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if Onvif is supported
+	 * @return Whether Onvif is supported
+	 */
+	public Boolean isOnvifSupported() {
+		RxData out = nm.exec("getProductOnvifFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "onvifFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if P2P is supported
+	 * @return Whether P2P is supported
+	 */
+	public Boolean isP2PSupported() {
+		RxData out = nm.exec("getProductP2pFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "p2pFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if WPS is supported
+	 * @return Whether WPS is supported
+	 */
+	public Boolean isWPSSupported() {
+		RxData out = nm.exec("getProductWpsFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "wpsFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if audio-speak is supported
+	 * @return Whether audio-speak is supported
+	 */
+	public Boolean isAudioSupported() {
+		RxData out = nm.exec("getProductAudioFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "audioFlag").contains("1");
+	}
+	
+	/** 
+	 * Test if audio-talk is supported
+	 * @return Whether audio-talk is supported
+	 */
+	public Boolean isTalkSupported() {
+		RxData out = nm.exec("getProductTalkFlag");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "talkFlag").contains("1");
+	}
+	
+	/** 
+	 * Get if this Foscam supports RTSP.
+	 * Warning: RTSP is not listed inside of the CGI docs. Use with caution!
+	 * @return True if camera supports onvif and false if it doesn't.
+	 */
+	public Boolean isRtspSupported() {
+		RxData out = nm.exec("getPortInfo");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		if (out.xml.contains("rtspPort")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/** 
+	 * Get camera's firewall status
+	 * @return True if firewall is enabled
+	 */
+	public Boolean isFirewallEnabled() {
+		RxData out = nm.exec("getFirewallConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "isEnable").contains("1");
+	}
+	
+	/** 
+	 * Get camera's firewall rule
+	 * @return Returns rule (0=blacklist, 1=whitelist)
+	 */
+	public String getFirewallRule() {
+		RxData out = nm.exec("getFirewallConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "rule").trim();
+	}
+	
+	/** 
+	 * Get specific entry in camera's firewall IP list.
+	 * @param number - number of entry
+	 * @return Returns IP address in String (can be empty if none is set)
+	 */
+	public String getFirewallEntry(int number) {
+		if (number < 0 || number > 7) {
+			return null;
+		}
+		RxData out = nm.exec("getFirewallConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "ipList" + number).trim();
+	}
+	
+	/** 
+	 * Get camera's application version
+	 * @return Camera application version
+	 */
+	public String getProductAppVer() {
+		RxData out = nm.exec("getProductAppVer");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "appVer");
 	}
 	
 	/** 

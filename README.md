@@ -46,8 +46,6 @@ Here is a full list of commands:
     - getOnvifPort();
     - getRtspPort();
 - setPortInfo(PortInfo);
-- doesCameraSupportOnvif();
-- doesCameraSupportRtsp();
 
 - isUPnPEnabled();
 - setUPNP(true/false);
@@ -60,18 +58,59 @@ Here is a full list of commands:
 - getFTPConfig();
 - setFTPConfig(FTPConfig);
 
+- isFirewallEnabled();
+- getFirewallRule();
+- getFirewallEntry(0-7);
+
 // Camera controls
+- snapPicture();
 - openInfraLed();
 - closeInfraLed();
 - getInfraLedMode();
 - setInfraLedMode(0-1);
+- rebootSystem();
+- exportConfig();
+- exportedConfigURL();
+- getLogEntries(count, offset);
 
 // Camera info
 - getName();
 - setName("MyCamera");
+- getProductAppVer();
+- getProductModel();
+- getProductModelName();
+- getProductLanguage();
+- getProductSensorType();
+- getProductWifiType();
+
+- isAudioSupported();
+- isIoAlarmSupported();
+- isOnvifSupported();
+- isP2PSupported();
+- isSdcardSupport();
+- isProductOutdoorModel();
+- isProductZoomModel();
+- isPtModel();
+- isRs485Supported();
+- isRtspSupported();
+- isTalkSupported();
+- isWPSSupported();
+
+// Deprecated
+- doesCameraSupportOnvif();
+- doesCameraSupportRtsp();
 ```
 
 ## Changelog
+v1.03
+- Added all info flags
+- Added DeviceInfo
+- doesCameraSupportOnvif and Rtsp are now deprecated.
+- Added firewall controls
+- Added log controls
+- Added config exporting control
+- Added snapPicture()
+
 v1.02
 - Added FTP configuration controls
 - Added Infrared light and config controls

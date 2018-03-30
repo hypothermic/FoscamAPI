@@ -7,17 +7,17 @@ import nl.hypothermic.foscamlib.Result;
 import nl.hypothermic.foscamlib.RxData;
 import nl.hypothermic.foscamlib.containers.Credentials;
 
-/** ------------------------ **\
+/******************************\
  * > NetManager.java		< *
  * FoscamLib by hypothermic	  *
  * www.github.com/hypothermic *
-\** ------------------------ **/
+\******************************/
 
 public class NetManager {
 	
 	private final NetExecutor x;
 	private final NetParser p;
-	private final String addr;
+	public final String addr;
 	private final Credentials creds;
 
 	/** Construct a NetManager */
@@ -74,6 +74,34 @@ public class NetManager {
 		Result deferr = Result.UNKNOWNERR;
 		try {
 			String xml = x.get(addr + "cmd=" + URLEncoder.encode(command) + "&" + URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value) + "&usr=" + creds.user + "&pwd=" + creds.password);
+			deferr = p.getResult(xml);
+			if (deferr == Result.INVALID_RESPONSE) {
+				throw new IOException();
+			}
+			RxData out = new RxData(deferr, xml);
+			return out;
+		} catch (IOException e) {
+			return new RxData(deferr, null);
+		}
+	}
+	
+	/**
+	 * Execute a HTTP GET request with one command and two parameters with one value each.
+	 * Warning: privileges may be needed!
+	 * @param command
+	 * @param param1name
+	 * @param param1value
+	 * @param param2name
+	 * @param param2value
+	 * @return RxData with Result and xml
+	 */
+	public RxData exec(String command, String param1name, String param1value, String param2name, String param2value) {
+		Result deferr = Result.UNKNOWNERR;
+		try {
+			String xml = x.get(addr + "cmd=" + URLEncoder.encode(command) + "&"
+								+ URLEncoder.encode(param1name) + "=" + URLEncoder.encode(param1value)
+								+ URLEncoder.encode(param2name) + "=" + URLEncoder.encode(param2value)
+								+ "&usr=" + creds.user + "&pwd=" + creds.password);
 			deferr = p.getResult(xml);
 			if (deferr == Result.INVALID_RESPONSE) {
 				throw new IOException();
