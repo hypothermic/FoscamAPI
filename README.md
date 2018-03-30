@@ -1,5 +1,5 @@
 # FoscamLib
-Easily connect to Foscam camera's with this lightweight Java library. One command is all it takes.  
+Easily connect to Foscam IP camera's with this lightweight Java library. One command is all it takes.  
 Tested on the FI-9900P, although the commands should work on almost all models.
 
 ## Example
@@ -13,10 +13,10 @@ camera.setSharpness(90);
 ```
 
 ## Features
-Here is a full list of commands:
+Here is a full list of commands (sorted by relevancy):
 
 ```java
-// Image setting
+// Image settings
 - setBrightness(0-100);
 - setContrast(0-100);
 - setSaturation(0-100);
@@ -37,10 +37,24 @@ Here is a full list of commands:
 - getNetworkDNSSecondary();
 - getURL();
 - getInterfaceURL();
+- getPortInfo();
+    - getWebPort();
+    - getMediaPort();
+    - getHttpsPort();
+    - getOnvifPort();
+    - getRtspPort();
+- setPortInfo(PortInfo);
+- doesCameraSupportOnvif();
+- doesCameraSupportRtsp();
 - isDHCP();
+- isUPnPEnabled();
+- setUPNP(true/false);
 ```
 
 ## Changelog
+v1.01
+- Added PortInfo and port getters
+- Added get/set for UPnP
 v1.00
 - Initial release
 
