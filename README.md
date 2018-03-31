@@ -12,6 +12,21 @@ camera.setSharpness(90);
 ...
 ```
 
+## Maven dependency
+```xml
+<repository>
+  <id>foscamlib-mvn-repo</id>
+  <url>https://raw.github.com/hypothermic/foscamlib/mvn-repo/</url>
+</repository>
+
+<dependency>
+  <groupId>nl.hypothermic</groupId>
+  <artifactId>foscamlib</artifactId>
+  <!-- If you're using Maven3, specify version num -->
+  <version>LATEST</version>
+</dependency>
+```
+
 ## Features
 Here is a full list of commands:
 
@@ -96,12 +111,23 @@ Here is a full list of commands:
 - isTalkSupported();
 - isWPSSupported();
 
+// Camera streams
+- getMainVideoStreamType();
+- getSubVideoStreamType();
+- setMainVideoStreamType(0-3);
+- setSubStreamFormat(0-1);
+- getMJStreamURL();
+
 // Deprecated
 - doesCameraSupportOnvif();
 - doesCameraSupportRtsp();
 ```
 
 ## Changelog
+v1.04
+- Added camera stream controls.
+- Created Maven Repository. See above for details. (branch "mvn-repo")
+
 v1.03
 - Added all info flags
 - Added DeviceInfo

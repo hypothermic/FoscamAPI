@@ -729,6 +729,73 @@ public class Foscam {
 	}
 	
 	/** 
+	 * Get Foscam's main video stream type
+	 * @return Main video stream type
+	 */
+	public String getMainVideoStreamType() {
+		RxData out = nm.exec("getMainVideoStreamType");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "streamType");
+	}
+	
+	/** 
+	 * Get Foscam's sub video stream type
+	 * @return Sub video stream type
+	 */
+	public String getSubVideoStreamType() {
+		RxData out = nm.exec("getSubVideoStreamType");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "streamType");
+	}
+	
+	/**
+	 * Set Foscam's main video stream type
+	 * @param streamType (int 0-3)
+	 * @return True if succeeded
+	 */
+	public Boolean setMainVideoStreamType(int streamType) {
+		if (streamType < 0 || streamType > 3) {
+			return null;
+		}
+		RxData out = nm.exec("setMainVideoStreamType", "streamType", streamType + "");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/**
+	 * Set Foscam's main video stream type<br><br>
+	 * > 0 = H264<br>
+	 * > 1 = MotionJpeg
+	 * @param format (0=H264, 1=MJ)
+	 * @return True if succeeded
+	 */
+	public Boolean setSubStreamFormat(int format) {
+		if (format < 0 || format > 1) {
+			return null;
+		}
+		RxData out = nm.exec("setSubStreamFormat", "format", format + "");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get Foscam's MotionJpeg stream URL
+	 * @return This Foscam's MotionJpeg stream URL as String
+	 */
+	// Hardcoded, should be the same for every camera.
+	public String getMJStreamURL() {
+		return protocol + "://" + address + ":" + port + "/cgi-bin/CGIStream.cgi?cmd=GetMJStream";
+	}
+	
+	/** 
 	 * Get Foscam's device info
 	 * @return DeviceInfo object
 	 */
