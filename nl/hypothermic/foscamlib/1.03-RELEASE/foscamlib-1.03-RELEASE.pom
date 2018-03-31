@@ -14,7 +14,7 @@ See README.md for legal disclaimer.</description>
     <maven.compiler.target>1.6</maven.compiler.target>
     <github.global.server>github</github.global.server>
     <github.global.userName>hypothermic</github.global.userName>
-    <github.global.password>5a5b9d9e772d09bed09490628bca9fc7817a5cc2</github.global.password>
+    <github.global.password>${env.githubpass}</github.global.password>
   </properties>
   
   <build>
