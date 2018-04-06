@@ -1,13 +1,24 @@
 package nl.hypothermic.foscamlib;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import nl.hypothermic.foscamlib.containers.Account;
 import nl.hypothermic.foscamlib.containers.Credentials;
 import nl.hypothermic.foscamlib.containers.DeviceInfo;
 import nl.hypothermic.foscamlib.containers.FTPConfig;
+import nl.hypothermic.foscamlib.containers.LocalAlarmRecordConfig;
+import nl.hypothermic.foscamlib.containers.MotionDetectConfig;
+import nl.hypothermic.foscamlib.containers.OSDSettings;
+import nl.hypothermic.foscamlib.containers.PTZSpeed;
 import nl.hypothermic.foscamlib.containers.PortInfo;
+import nl.hypothermic.foscamlib.containers.SnapConfig;
+import nl.hypothermic.foscamlib.containers.SnapConfig.PicQuality;
+import nl.hypothermic.foscamlib.containers.SnapConfig.SaveLocation;
 import nl.hypothermic.foscamlib.exception.ConnectException;
 import nl.hypothermic.foscamlib.net.NetExecutor;
 import nl.hypothermic.foscamlib.net.NetManager;
@@ -200,6 +211,31 @@ public class Foscam {
 			flipstate = 0;
 		}
 		RxData out = nm.exec("flipVideo", "isFlip", flipstate + "");
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get frame shipping reference mode of H264 encoding stream
+	 * @return Boolean (true=flipped, 1=two seperated - four skipped , null=error)
+	 */
+	public Integer getH264FrameRefMode() {
+		RxData out = nm.exec("getH264FrmRefMode");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "mode"));
+	}
+	
+	/**
+	 * Set frame shipping reference mode of H264 encoding stream
+	 * @param state (0=normal ref, 1=two seperated - four skipped)
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setH264FrameRefMode(int mode) {
+		if (mode < 0 || mode > 1) {
+			return false;
+		}
+		RxData out = nm.exec("setH264FrmRefMode", "mode", mode + "");
 		return out.result == Result.SUCCESS;
 	}
 	
@@ -793,6 +829,564 @@ public class Foscam {
 	// Hardcoded, should be the same for every camera.
 	public String getMJStreamURL() {
 		return protocol + "://" + address + ":" + port + "/cgi-bin/CGIStream.cgi?cmd=GetMJStream";
+	}
+	
+	/** 
+	 * Get Foscam's device info
+	 * @return DeviceInfo object
+	 */
+	public OSDSettings getOSDSettings() {
+		RxData out = nm.exec("getOSDSetting");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		// Not all camera's support isEnableTempAndHumid because it's not in the user guide
+		if (out.xml.contains("isEnableTempAndHumid")) {
+			return new OSDSettings(p.getTagValue(out.xml, "isEnableTimeStamp"), p.getTagValue(out.xml, "isEnableTempAndHumid"),
+								   p.getTagValue(out.xml, "isEnableDevName"), p.getTagValue(out.xml, "dispPos"), p.getTagValue(out.xml, "isEnableOSDMask"));
+		} else {
+			return new OSDSettings(p.getTagValue(out.xml, "isEnableTimeStamp"), null, p.getTagValue(out.xml, "isEnableDevName"), 
+								   p.getTagValue(out.xml, "dispPos"), p.getTagValue(out.xml, "isEnableOSDMask"));
+		}
+	}
+	
+	/**
+	 * Set camera's OSD setting from OSDSetting object
+	 * @param osd = OSDSettings object
+	 * @return True if succeeded
+	 */
+	public Boolean setOSDSettings(OSDSettings osd) {
+		RxData out;
+		// If camera supports isEnableTempAndHumid (we can only determine it from OSDSetting preset)
+		if (osd.isEnableTempAndHumid == null) {
+			out = nm.exec("setOSDSetting", "isEnableTimeStamp", osd.isEnableTimeStamp,
+										   "isEnableDevName", osd.isEnableDevName,
+										   "dispPos", osd.dispPos,
+										   "isEnableOSDMask", osd.dispPos);
+		} else {
+			out = nm.exec("setOSDSetting", "isEnableTimeStamp", osd.isEnableTimeStamp,
+										   "isEnableTempAndHumid", osd.isEnableTempAndHumid,
+					   	  				   "isEnableDevName", osd.isEnableDevName,
+					   	  				   "dispPos", osd.dispPos,
+					   	  				   "isEnableOSDMask", osd.dispPos);
+		}
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Test if camera's OSD mask is enabled
+	 * @return Whether camera's OSD mask is enabled
+	 */
+	public Boolean isOSDMaskEnabled() {
+		RxData out = nm.exec("getOSDMask");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "isEnableOSDMask").contains("1");
+	}
+	
+	/**
+	 * Set Foscam's OSD mask status
+	 * @param state (true/false)
+	 * @return True if succeeded
+	 */
+	public Boolean setOSDMaskState(boolean state) {
+		int osdstate = 0;
+		if (state) {
+			osdstate = 1;
+		}
+		RxData out = nm.exec("setOSDMask", "isEnableOSDMask", osdstate + "");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/**
+	 * Add user account
+	 * @param Account object (with at least username, password and privilege assigned)
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean addAccount(Account account) {
+		if (account.username == null || account.password == null) {
+			return false;
+		}
+		RxData out = nm.exec("addAccount", "usrName", account.username,
+				  						   "usrPwd", account.password,
+				  						   "privilege", account.privilege.getValue() + "");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Add user account
+	 * @param Credentials object
+	 * @param Privilege enum instance
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean addAccount(Credentials creds, Account.Privilege privilege) {
+		RxData out = nm.exec("addAccount", "usrName", creds.user,
+				  						   "usrPwd", creds.password,
+				  						   "privilege", privilege.getValue() + "");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Delete user account
+	 * @param Account object with username that needs to be deleted
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean deleteAccount(Account account) {
+		if (account.username == null) {
+			return false;
+		}
+		RxData out = nm.exec("delAccount", "usrName", account.username);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Delete user account
+	 * @param Credentials object with username that needs to be deleted
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean deleteAccount(Credentials creds) {
+		RxData out = nm.exec("delAccount", "usrName", creds.user);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Delete user account
+	 * @param Username of user that needs to be deleted
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean deleteAccount(final String username) {
+		RxData out = nm.exec("delAccount", "usrName", username);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change password of user account
+	 * @param account = Account object that requires password change (with at least username and password assigned)
+	 * @param newPassword = New password of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changePassword(Account account, final String newPassword) {
+		if (account.username == null || account.password == null || account.password == newPassword) {
+			return false;
+		}
+		RxData out = nm.exec("changePassword", "usrName", account.username,
+											   "oldPwd", account.password,
+											   "newPwd", newPassword);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change password of user account
+	 * @param creds = Credentials object that requires password change
+	 * @param newPassword = New password of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changePassword(Credentials creds, final String newPassword) {
+		if (creds.password == newPassword) {
+			return false;
+		}
+		RxData out = nm.exec("changePassword", "usrName", creds.user,
+											   "oldPwd", creds.password,
+											   "newPwd", newPassword);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change password of user account
+	 * @param username = Username of user that requires password change
+	 * @param oldPassword = Old (current) password of user account
+	 * @param newPassword = New password of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changePassword(final String username, final String oldPassword, final String newPassword) {
+		if (oldPassword == newPassword) {
+			return false;
+		}
+		RxData out = nm.exec("changePassword", "usrName", username,
+											   "oldPwd", oldPassword,
+											   "newPwd", newPassword);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change username of user account
+	 * @param account = Account object that requires username change (with at least username assigned)
+	 * @param newUsername = New username of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changeUsername(Account account, final String newUsername) {
+		if (account.username == null || account.username == newUsername) {
+			return false;
+		}
+		RxData out = nm.exec("changeUserName", "usrName", account.username,
+				   							   "newUsrName", newUsername);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change username of user account
+	 * @param creds = Credentials object that requires username change
+	 * @param newUsername = New username of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changeUsername(Credentials creds, final String newUsername) {
+		if (creds.user == null || creds.user == newUsername) {
+			return false;
+		}
+		RxData out = nm.exec("changeUserName", "usrName", creds.user,
+				   							   "newUsrName", newUsername);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Change username of user account
+	 * @param username = Username of user account that requires password change
+	 * @param oldUsername = Old (current) username of user account
+	 * @param newUsername = New username of user account
+	 * @return True if succeeded, false if not succeeded
+	 */
+	public boolean changeUsername(final String oldUsername, final String newUsername) {
+		if (oldUsername == newUsername) {
+			return false;
+		}
+		RxData out = nm.exec("changeUserName", "usrName", oldUsername,
+											   "newUsrName", newUsername);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get user account list of the camera
+	 * @return {@literal List<String>} with
+	 */
+	public List<String> getUserList() {
+		RxData out = nm.exec("getUserList");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		List<String> l = new ArrayList<String>();
+		for (int n = 0; n < (Integer.parseInt(p.getTagValue(out.xml, "usrCnt"))); n++) {
+			l.add(p.getTagValue(out.xml, "usr" + (n + 1)));
+		}
+		return l;
+	}
+	
+	/** 
+	 * Get user account list of the camera with indexes
+	 * @return {@literal HashMap<Integer (index), String (username)>} with user accounts
+	 */
+	public HashMap<Integer, String> getUserListWithIndexes() {
+		RxData out = nm.exec("getUserList");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		HashMap l = new HashMap<Integer, String>();
+		for (int n = 0; n < (Integer.parseInt(p.getTagValue(out.xml, "usrCnt"))); n++) {
+			l.put(n + 1, p.getTagValue(out.xml, "usr" + (n + 1)));
+		}
+		return l;
+	}
+	
+	/** 
+	 * Get current session list of the camera
+	 * @return {@literal List<String>} with
+	 */
+	public List<String> getSessionList() {
+		RxData out = nm.exec("getSessionList");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		List<String> l = new ArrayList<String>();
+		for (int n = 0; n < (Integer.parseInt(p.getTagValue(out.xml, "usrCnt"))); n++) {
+			l.add(p.getTagValue(out.xml, "usr" + (n + 1)));
+		}
+		return l;
+	}
+	
+	/** 
+	 * Get current session list of the camera with indexes
+	 * @return {@literal HashMap<Integer (index), String (username)>} with logged in user accounts
+	 */
+	public HashMap<Integer, String> getSessionListWithIndexes() {
+		RxData out = nm.exec("getSessionList");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		HashMap l = new HashMap<Integer, String>();
+		for (int n = 0; n < (Integer.parseInt(p.getTagValue(out.xml, "usrCnt"))); n++) {
+			l.put(n + 1, p.getTagValue(out.xml, "usr" + (n + 1)));
+		}
+		return l;
+	}
+	
+	/** 
+	 * PTZ: Move up
+	 * @return True if moved up
+	 */
+	public boolean ptzMoveUp() {
+		RxData out = nm.exec("ptzMoveUp");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move down
+	 * @return True if moved down
+	 */
+	public boolean ptzMoveDown() {
+		RxData out = nm.exec("ptzMoveUp");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move left
+	 * @return True if moved left
+	 */
+	public boolean ptzMoveLeft() {
+		RxData out = nm.exec("ptzMoveLeft");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move right
+	 * @return True if moved right
+	 */
+	public boolean ptzMoveRight() {
+		RxData out = nm.exec("ptzMoveRight");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move top-left
+	 * @return True if moved top-left
+	 */
+	public boolean ptzMoveTopLeft() {
+		RxData out = nm.exec("ptzMoveTopLeft");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move top-right
+	 * @return True if moved top-right
+	 */
+	public boolean ptzMoveTopRight() {
+		RxData out = nm.exec("ptzMoveTopRight");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move bottom-left
+	 * @return True if moved bottom-left
+	 */
+	public boolean ptzMoveBottomLeft() {
+		RxData out = nm.exec("ptzMoveBottomLeft");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Move bottom-right
+	 * @return True if moved bottom-right
+	 */
+	public boolean ptzMoveBottomRight() {
+		RxData out = nm.exec("ptzMoveBottomRight");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Stop moving
+	 * @return True if stopped moving
+	 */
+	public boolean ptzStopMoving() {
+		RxData out = nm.exec("ptzStopRun");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * PTZ: Reset to default position
+	 * @return True if reset to default position
+	 */
+	public boolean ptzResetPosition() {
+		RxData out = nm.exec("ptzReset");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get Foscam's local alarm-record config
+	 * @return LocalAlarmRecordConfig object
+	 */
+	public PTZSpeed getPTZSpeed() {
+		RxData out = nm.exec("getPTZSpeed");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return PTZSpeed.match(Integer.parseInt(p.getTagValue(out.xml, "speed")));
+	}
+	
+	/**
+	 * Set Foscam's local alarm-record config
+	 * @param LocalAlarmRecordConfig object
+	 * @return True if succeeded
+	 */
+	public boolean setPTZSpeed(PTZSpeed speed) {
+		RxData out = nm.exec("setPTZSpeed", "speed", speed.getValue() + "");
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get Foscam's motion detect configuration
+	 * @return MotionDetectConfig object (or null if not succeeded)
+	 */
+	// Camera gives ACCESS_DENIED, even though authenticated.
+	// Put this method on hold for now.
+	/*public String getMotionDetectConfig() {
+		RxData out = nm.exec("getMotionDetectConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "linkage");
+	}*/
+	
+	/**
+	 * Set Foscam's motion detect configuration
+	 * @param mdc = MotionDetectConfiguration object
+	 * @return True if succeeded
+	 */
+	// Camera gives ACCESS_DENIED, even though authenticated.
+	// Put this method on hold for now.
+	/*public Boolean setMotionDetectConfig(MotionDetectConfig mdc) {
+		RxData out = nm.exec("setMotionDetectConfig", "isEnable", mdc.isEnable,
+													  "linkage", mdc.linkage,
+													  "snapInterval", mdc.snapInterval,
+													  "triggerInterval", mdc.triggerInterval);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}*/
+	
+	/** 
+	 * Get Foscam's local alarm-record config
+	 * @return LocalAlarmRecordConfig object
+	 */
+	public LocalAlarmRecordConfig getLocalAlarmRecordConfig() {
+		RxData out = nm.exec("getLocalAlarmRecordConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new LocalAlarmRecordConfig(p.getTagValue(out.xml, "isEnableLocalAlarmRecord"), 
+										  p.getTagValue(out.xml, "localAlarmRecordSecs"));
+	}
+	
+	/**
+	 * Set Foscam's local alarm-record config
+	 * @param LocalAlarmRecordConfig object
+	 * @return True if succeeded
+	 */
+	public Boolean setLocalAlarmRecordConfig(LocalAlarmRecordConfig larc) {
+		RxData out = nm.exec("setLocalAlarmRecordConfig", "isEnableLocalAlarmRecord", larc.isEnabled,
+														  "localAlarmRecordSecs", larc.recordSecs);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get Foscam's snap configuration
+	 * @return SnapConfig object
+	 */
+	public SnapConfig getSnapConfig() {
+		RxData out = nm.exec("getSnapConfig");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new SnapConfig(PicQuality.fromInt(Integer.parseInt(p.getTagValue(out.xml, "snapPicQuality").trim())), 
+							  SaveLocation.fromInt(Integer.parseInt(p.getTagValue(out.xml, "saveLocation").trim())));
+	}
+	
+	/**
+	 * Set Foscam's snap configuration
+	 * @param SnapConfig object
+	 * @return True if succeeded
+	 */
+	public Boolean setSnapConfig(SnapConfig sc) {
+		RxData out = nm.exec("setSnapConfig", "snapPicQuality", sc.pq.getValue() + "",
+											  "saveLocation", sc.sl.getValue() + "");
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return true;
 	}
 	
 	/** 

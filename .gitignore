@@ -1,2 +1,3 @@
 /target/
 /src/main/java/nl/hypothermic/foscamlib/TestSuite.java
+/hs_err_pid*

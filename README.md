@@ -5,7 +5,7 @@ Tested on the FI-9900P, although the commands should work on almost all models.
 ## Example
 ```java
 // Connect to the camera
-Foscam camera = new Foscam("192.168.1.40", 88, "admin", "password");
+Foscam camera = new Foscam("192.168.1.40", 88, "username", "password");
 
 // Do whatever you want
 camera.setSharpness(90);
@@ -66,9 +66,9 @@ Here is a full list of commands:
 - setUPNP(true/false);
 
 - isP2PEnabled();
-- setP2P();
+- setP2P(true/false);
 - getP2PPort();
-- setP2PPort();
+- setP2PPort(value);
 
 - getFTPConfig();
 - setFTPConfig(FTPConfig);
@@ -114,19 +114,71 @@ Here is a full list of commands:
 // Camera streams
 - getMainVideoStreamType();
 - getSubVideoStreamType();
+- getH264FrameRefMode()
 - setMainVideoStreamType(0-3);
 - setSubStreamFormat(0-1);
+- setH264FrameRefMode(int mode)
 - getMJStreamURL();
 
-// Deprecated
+- setSnapConfig();
+- getSnapConfig();
+
+// Camera account control
+- addAccount(...);
+- deleteAccount(...);
+- changePassword(...);
+- changeUsername(...);
+- getUserList();
+- getUserListWithIndexes();
+- getSessionList();
+- getSessionListWithIndexes();
+
+// OSD settings
+- getOSDSettings();
+- setOSDSettings(...);
+- isOSDMaskEnabled();
+- setOSDMaskState(true/false);
+
+// Alarm settings
+- getMotionDetectConfig();
+- setMotionDetectConfig(...);
+- getLocalAlarmRecordConfig();
+- setLocalAlarmRecordConfig(...);
+
+// PTZ controls
+- ptzMoveUp();
+- ptzMoveDown();
+- ptzMoveLeft();
+- ptzMoveRight();
+- ptzMoveTopLeft();
+- ptzMoveTopRight();
+- ptzMoveBottomLeft();
+- ptzMoveBottomRight();
+- ptzStopMoving();
+- ptzResetPosition();
+- getPTZSpeed();
+- setPTZSpeed(0-4);
+
+// Deprecated, kept for backwards compatibility
 - doesCameraSupportOnvif();
 - doesCameraSupportRtsp();
 ```
 
 ## Changelog
+v1.05
+- Added user account controls
+- Added local alarm record config
+- Added PTZ controls and PTZ speed controls
+- Added motion detection functionality (beta):
+    - Motion detect config
+    - Motion detect schedule map
+    - Motion detect area map
+- Added H264 stream settings
+- Fixed NetExecutor (see commit changes)
+
 v1.04
 - Added camera stream controls.
-- Created Maven Repository. See above for details. (branch "mvn-repo")
+- Created Maven Repository. See [above](#Maven-dependency) for details. (branch "mvn-repo") [//]: # (The link to Maven-dependency doesn't work for my IDE, but it should work on GitHub. Fingers crossed.)
 
 v1.03
 - Added all info flags
@@ -151,6 +203,9 @@ v1.00
 
 ## Mentions
 FoscamLib is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
+
+## License
+The license can be found [here](./LICENSE.txt) or in the root folder of the project.
 
 ## Sources
 `http://www.camarasip.es/descarga/IP_Camera_CGI_(SDK).pdf`

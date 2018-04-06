@@ -8,7 +8,7 @@ package nl.hypothermic.foscamlib.containers;
 
 public class PortInfo {
 	
-	// Store ports in Strings, not in ints, because we will send them in String format as well.
+	// Store ports in Strings, not as ints, because we will send them in String format as well.
 	// Names are the same as in the User Guide.
 	public final String webPort;
 	public final String httpsPort;

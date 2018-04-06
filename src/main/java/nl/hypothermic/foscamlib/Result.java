@@ -9,6 +9,7 @@ package nl.hypothermic.foscamlib;
 public enum Result {
 	
 	// ----- Foscam CGI results ----- //
+	// Most javadoc descriptions are directly from the user guide
 	
 	/** Success */
 	SUCCESS(0),
