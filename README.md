@@ -178,7 +178,7 @@ v1.05
 
 v1.04
 - Added camera stream controls.
-- Created Maven Repository. See [above](#Maven-dependency) for details. (branch "mvn-repo") [//]: # (The link to Maven-dependency doesn't work for my IDE, but it should work on GitHub. Fingers crossed.)
+- Created Maven Repository. See "Maven dependency" above for details. (branch "mvn-repo")
 
 v1.03
 - Added all info flags
