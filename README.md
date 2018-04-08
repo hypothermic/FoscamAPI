@@ -184,6 +184,8 @@ Here is a full list of commands:
 - doesCameraSupportRtsp();
 ```
 
+See [javadoc](https://hypothermic.nl/foscamlib/javadoc/) for more information and details about these features.
+
 ## Changelog
 v1.06
 - Added RS485 controls
@@ -234,7 +236,8 @@ v1.00
 ## Troubleshooting
 If you are having issues with FoscamLib or any component:
 1. Make sure your camera firmware is up to date. Do not ignore this step.
-2. Open an [issue](/../../issues/) where you describe the problem you're having. Include your camera model and firmware version.
+2. Check the [javadoc](https://hypothermic.nl/foscamlib/javadoc/) if you are using the method correctly.
+3. Open an [issue](/../../issues/) where you describe the problem you're having. Include your camera model and firmware version.
 
 ## Mentions
 FoscamLib is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
