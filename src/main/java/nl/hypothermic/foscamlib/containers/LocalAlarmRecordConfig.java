@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/******************************\
+ * > LocalAlarmRecordConfig	< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\******************************/
+
 public class LocalAlarmRecordConfig {
 	
 	/** Is local alarm-record enabled (0-1) */

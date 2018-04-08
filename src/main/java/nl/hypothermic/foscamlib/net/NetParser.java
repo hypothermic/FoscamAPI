@@ -1,6 +1,7 @@
 package nl.hypothermic.foscamlib.net;
 
 import nl.hypothermic.foscamlib.Result;
+import nl.hypothermic.foscamlib.containers.AccessPoint;
 
 /******************************\
  * > NetParser.java			< *
@@ -54,5 +55,13 @@ public class NetParser {
 	// source: https://stackoverflow.com/questions/4076910/how-to-retrieve-element-value-of-xml-using-java
 	public String getTagValue(String xml, String tagName){
 	    return xml.split("<" + tagName + ">")[1].split("</" + tagName + ">")[0];
+	}
+	
+	public AccessPoint parseFromXML(String xml) {
+		return new AccessPoint(getTagValue(xml, "ssid"), 
+							   getTagValue(xml, "mac"), 
+							   Integer.parseInt(getTagValue(xml, "quality")), 
+							   Boolean.parseBoolean(getTagValue(xml, "isEncrypt")), 
+							   AccessPoint.EncryptType.match(Integer.parseInt(getTagValue(xml, "encryptType"))));
 	}
 }

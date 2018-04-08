@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/******************************\
+ * > MotionDetectScheduleMap  *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\******************************/
+
 public class MotionDetectScheduleMap {
 	
 	/**

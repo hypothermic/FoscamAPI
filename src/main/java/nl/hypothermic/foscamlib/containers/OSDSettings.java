@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/******************************\
+ * > OSDSettings.java		< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\******************************/
+
 public class OSDSettings {
 	
 	/** Is time stamp shown on OSD */

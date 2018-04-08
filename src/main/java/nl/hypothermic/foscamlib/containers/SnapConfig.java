@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/******************************\
+ * > SnapConfig.java		< *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\******************************/
+
 public class SnapConfig {
 	
 	public final PicQuality pq;

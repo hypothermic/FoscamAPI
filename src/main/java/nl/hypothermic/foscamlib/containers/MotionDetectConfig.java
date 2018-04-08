@@ -1,5 +1,11 @@
 package nl.hypothermic.foscamlib.containers;
 
+/******************************\
+ * > MotionDetectConfig.java  *
+ * FoscamLib by hypothermic	  *
+ * www.github.com/hypothermic *
+\******************************/
+
 public class MotionDetectConfig {
 	
 	public final int isEnable;

@@ -1,7 +1,7 @@
 package nl.hypothermic.foscamlib.containers;
 
 /******************************\
- * > PTZSpeed.java			< *
+ * > ZoomSpeed.java			< *
  * FoscamLib by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
@@ -9,17 +9,15 @@ package nl.hypothermic.foscamlib.containers;
 /**
  * Enum of PTZ speeds with their respective integers attached.
  */
-public enum PTZSpeed {
+public enum ZoomSpeed {
 	
-	VERYSLOW(0),
-	SLOW(1),
-	NORMAL(2),
-	FAST(3),
-	VERYFAST(4);
+	SLOW(0),
+	NORMAL(1),
+	FAST(2);
 	
 	private final int value;
 	
-	private PTZSpeed(final int value) {
+	private ZoomSpeed(final int value) {
 		this.value = value;
 	}
 	
@@ -33,18 +31,14 @@ public enum PTZSpeed {
 	/**
 	 * Get PTZSpeed instance from int
 	 */
-	public static PTZSpeed match(int x) {
+	public static ZoomSpeed match(int x) {
         switch(x) {
         case 0:
-            return VERYSLOW;
+        	return SLOW;
         case 1:
-            return SLOW;
+        	return NORMAL;
         case 2:
-            return NORMAL;
-        case 3:
-            return FAST;
-        case 4:
-            return VERYFAST;
+        	return FAST;
         }
         return null;
     }

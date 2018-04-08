@@ -1,6 +1,7 @@
 # FoscamLib
 Easily connect to Foscam IP camera's with this lightweight Java library. One command is all it takes.  
-Tested on the FI-9900P, although the commands should work on almost all models.
+FoscamLib is suitable for all the HD cameras, including FI9821W, FI9818W, FI9801W, FI9802W and FI9805W.
+It is tested on the FI9900P.
 
 ## Example
 ```java
@@ -73,6 +74,15 @@ Here is a full list of commands:
 - getFTPConfig();
 - setFTPConfig(FTPConfig);
 
+- isWifiEnabled();
+- isWifiConnected();
+- getWifiApSSID();
+- getWifiApKey();
+- getWifiList();
+- getWifiListWithIndexes();
+- getWifiConfig();
+- setWifiConfig();
+
 - isFirewallEnabled();
 - getFirewallRule();
 - getFirewallEntry(0-7);
@@ -91,12 +101,16 @@ Here is a full list of commands:
 // Camera info
 - getName();
 - setName("MyCamera");
+- getSystemTime();
+- setSystemTime(...);
 - getProductAppVer();
 - getProductModel();
 - getProductModelName();
 - getProductLanguage();
 - getProductSensorType();
 - getProductWifiType();
+- set485Info(...);
+- get485Info();
 
 - isAudioSupported();
 - isIoAlarmSupported();
@@ -117,13 +131,15 @@ Here is a full list of commands:
 - getH264FrameRefMode()
 - setMainVideoStreamType(0-3);
 - setSubStreamFormat(0-1);
-- setH264FrameRefMode(int mode)
+- setH264FrameRefMode(0-1)
+- getScheduleRecordStreamChn();
+- setScheduleRecordStreamChn(...);
 - getMJStreamURL();
 
 - setSnapConfig();
 - getSnapConfig();
 
-// Camera account control
+// Account control
 - addAccount(...);
 - deleteAccount(...);
 - changePassword(...);
@@ -158,6 +174,10 @@ Here is a full list of commands:
 - ptzResetPosition();
 - getPTZSpeed();
 - setPTZSpeed(0-4);
+- getPTZSelfTestMode();
+- setPTZSelfTestMode(0-2);
+- getPTZPrePointForSelfTest();
+- setPTZPrePointForSelfTest(name);
 
 // Deprecated, kept for backwards compatibility
 - doesCameraSupportOnvif();
@@ -165,6 +185,14 @@ Here is a full list of commands:
 ```
 
 ## Changelog
+v1.06
+- Added RS485 controls
+- Added more PTZ controls
+- Added many Wi-Fi controls
+- Added system time controls
+- Reworked NetManager execution into a single method, old methods are now deprecated
+- Reworked all methods in Foscam.java to use the new exec() method
+
 v1.05
 - Added user account controls
 - Added local alarm record config
@@ -201,6 +229,11 @@ v1.01
 v1.00
 - Initial release
 
+## Troubleshooting
+If you are having issues with FoscamLib or any component:
+1. Make sure your camera firmware is up to date. Do not ignore this step.
+2. Open an [issue](/../../issues/) where you describe the problem you're having. Include your camera model and firmware version.
+
 ## Mentions
 FoscamLib is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
 
@@ -208,4 +241,5 @@ FoscamLib is not affiliated, associated, authorized, endorsed by, or in any way 
 The license can be found [here](./LICENSE.txt) or in the root folder of the project.
 
 ## Sources
-`http://www.camarasip.es/descarga/IP_Camera_CGI_(SDK).pdf`
+`http://www.camarasip.es/descarga/IP_Camera_CGI_(SDK).pdf`  
+`https://www.foscam.es/descarga/Foscam-IPCamera-CGI-User-Guide-AllPlatforms-2015.11.06.pdf`
