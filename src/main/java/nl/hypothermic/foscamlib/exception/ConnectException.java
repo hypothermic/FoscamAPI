@@ -1,6 +1,6 @@
 package nl.hypothermic.foscamlib.exception;
 
-import nl.hypothermic.foscamlib.Result;
+import nl.hypothermic.foscamlib.core.Result;
 
 /******************************\
  * > ConnectException.java	< *

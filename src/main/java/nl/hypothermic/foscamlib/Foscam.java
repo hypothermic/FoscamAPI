@@ -30,6 +30,8 @@ import nl.hypothermic.foscamlib.containers.WifiConfig;
 import nl.hypothermic.foscamlib.containers.WifiConfig.AuthMode;
 import nl.hypothermic.foscamlib.containers.WifiConfig.KeyFormat;
 import nl.hypothermic.foscamlib.containers.WifiConfig.NetType;
+import nl.hypothermic.foscamlib.core.Result;
+import nl.hypothermic.foscamlib.core.RxData;
 import nl.hypothermic.foscamlib.containers.ZoomSpeed;
 import nl.hypothermic.foscamlib.exception.ConnectException;
 import nl.hypothermic.foscamlib.net.NetExecutor;

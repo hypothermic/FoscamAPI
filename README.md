@@ -192,6 +192,8 @@ v1.06
 - Added system time controls
 - Reworked NetManager execution into a single method, old methods are now deprecated
 - Reworked all methods in Foscam.java to use the new exec() method
+- Moved core components to "core" package
+- Deprecated NetManager exec() methods are now removed
 
 v1.05
 - Added user account controls

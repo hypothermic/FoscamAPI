@@ -1,4 +1,4 @@
-package nl.hypothermic.foscamlib;
+package nl.hypothermic.foscamlib.core;
 
 /******************************\
  * > LoginResult.java		< *

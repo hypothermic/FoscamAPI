@@ -1,7 +1,7 @@
 package nl.hypothermic.foscamlib.net;
 
-import nl.hypothermic.foscamlib.Result;
 import nl.hypothermic.foscamlib.containers.AccessPoint;
+import nl.hypothermic.foscamlib.core.Result;
 
 /******************************\
  * > NetParser.java			< *
