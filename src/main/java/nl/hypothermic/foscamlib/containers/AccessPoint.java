@@ -72,6 +72,7 @@ public class AccessPoint {
 		
 		/**
 		 * Returns int value of EncryptType instance
+		 * @return Value of EncryptType
 		 */
 		public int getValue() {
 			return this.value;
@@ -79,6 +80,8 @@ public class AccessPoint {
 		
 		/**
 		 * Get EncryptType instance from int
+		 * @param x = int to get EncryptType instance from
+		 * @return EncryptType instance
 		 */
 		public static EncryptType match(int x) {
 	        switch(x) {

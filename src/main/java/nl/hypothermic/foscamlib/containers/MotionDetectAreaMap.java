@@ -35,6 +35,7 @@ public class MotionDetectAreaMap {
 	/**
 	 * Set a user-defined AreaMap.
 	 * If it is not 10x10 ints, it will be marked as invalid and it won't be set.
+	 * @param areamap = user-defined AreaMap
 	 */
 	public MotionDetectAreaMap(Integer[][] areamap) {
 		// Check for validity
@@ -54,16 +55,16 @@ public class MotionDetectAreaMap {
 	
 	/**
 	 * Set state of subregion
+	 * @param x = x-coordinate of subregion in map
+	 * @param y = y-coordinate of subregion in map
+	 * @param state = State to set subregion to
+	 * @return True if succeeded, null if error
 	 */
 	public Boolean setState(int x, int y, boolean state) {
 		if (x < 0 || x > 9 || y < 0 || y > 9) {
 			return null;
 		}
-		if (state) {
-			areamap[x][y] = 1;
-		} else {
-			areamap[x][y] = 0;
-		}
+		areamap[x][y] = state ? 1 : 0;
 		return true;
 	}
 }

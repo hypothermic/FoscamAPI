@@ -18,6 +18,9 @@ public class Account {
 	/**
 	 * Create a new Account object which stores the username, password and privilege level. <br><br>
 	 * <b>NOTE</b>: this is different from a Credentials object, because Credentials is final and Account is modifiable.
+	 * @param username = User name
+	 * @param password = Password of user
+	 * @param privilege = Privilege level of user
 	 */
 	public Account(final String username, final String password, final Privilege privilege) {
 		this.username = username;
@@ -41,6 +44,7 @@ public class Account {
 		
 		/**
 		 * Returns int value of Privilege instance
+		 * @return Value of Privilege instance
 		 */
 		public int getValue() {
 			return this.value;

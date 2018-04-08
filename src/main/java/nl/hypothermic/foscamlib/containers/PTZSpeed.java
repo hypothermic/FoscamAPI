@@ -32,6 +32,8 @@ public enum PTZSpeed {
 	
 	/**
 	 * Get PTZSpeed instance from int
+	 * @param x = int to get PTZSpeed instance from
+	 * @return PTZSpeed instance or null if error
 	 */
 	public static PTZSpeed match(int x) {
         switch(x) {

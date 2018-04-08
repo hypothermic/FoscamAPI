@@ -45,6 +45,7 @@ public class MotionDetectConfig {
 		
 		/**
 		 * Returns bit value of FTPMode instance
+		 * @return bit value of FTPMode instance
 		 */
 		public String getValue() {
 			return this.value;
@@ -70,6 +71,7 @@ public class MotionDetectConfig {
 		
 		/**
 		 * Returns sensitivity attached to instance
+		 * @return sensitivity attached to instance
 		 */
 		public int getValue() {
 			return this.value;

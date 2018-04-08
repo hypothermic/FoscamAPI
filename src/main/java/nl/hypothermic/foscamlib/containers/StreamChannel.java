@@ -21,13 +21,17 @@ public enum StreamChannel {
 		this.value = value;
 	}
 
-	/** Get value related to stream channel */
+	/** Get value related to stream channel
+	 * @return Value of StreamChannel instance
+	 */
 	public int getValue() {
 		return this.value;
 	}
 	
 	/**
 	 * Get StreamChannel instance from int
+	 * @param x = int to get StreamChannel instance from
+	 * @return StreamChannel instance or null if error
 	 */
 	public static StreamChannel match(int x) {
         switch(x) {
@@ -41,6 +45,8 @@ public enum StreamChannel {
 	
 	/**
 	 * Get StreamChannel instance from String
+	 * @param x = String to get StreamChannel instance from
+	 * @return StreamChannel instance or null if error
 	 */
 	public static StreamChannel match(String x) {
         if (x.contains("0"))

@@ -32,6 +32,7 @@ public class SnapConfig {
 		
 		/**
 		 * Returns int value of PicQuality instance
+		 * @return Value of PicQuality instance
 		 */
 		public int getValue() {
 			return this.value;
@@ -64,6 +65,7 @@ public class SnapConfig {
 		
 		/**
 		 * Returns int value of SaveLocation instance
+		 * @return Value of SaveLocation instance
 		 */
 		public int getValue() {
 			return this.value;

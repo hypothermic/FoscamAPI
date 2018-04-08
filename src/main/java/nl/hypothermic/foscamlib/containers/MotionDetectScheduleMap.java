@@ -52,16 +52,16 @@ public class MotionDetectScheduleMap {
 	
 	/**
 	 * Set state of subregion
+	 * @param x = x-coordinate of subregion in map
+	 * @param y = y-coordinate of subregion in map
+	 * @param state = State to set subregion to
+	 * @return True if succeeded, null if error
 	 */
 	public Boolean setState(int x, int y, boolean state) {
 		if (x < 0 || x > 47 || y < 0 || y > 6) {
 			return null;
 		}
-		if (state) {
-			schedulemap[x][y] = 1;
-		} else {
-			schedulemap[x][y] = 0;
-		}
+		schedulemap[x][y] = state ? 1 : 0;
 		return true;
 	}
 }

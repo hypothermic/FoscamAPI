@@ -35,7 +35,20 @@ public class SystemTime {
 	/** Second */
 	public int second;
 	
-	/** Constructor for a SystemTime object */
+	/** Constructor for a SystemTime object 
+	 * @param timeSource = TimeSource instance
+	 * @param ntpServer = NTPServer instance
+	 * @param dateFormat = DateFormat instance
+	 * @param timeFormat = TimeFormat instance
+	 * @param timeZone = Offset in seconds between local time and GMT
+	 * @param isDST = If daylight saving time is enabled
+	 * @param year = Current year
+	 * @param month = Current month
+	 * @param day = Current day
+	 * @param hour = Current hour
+	 * @param minute = Current minute
+	 * @param second = Current second
+	 */
 	public SystemTime(TimeSource timeSource, NTPServer ntpServer, DateFormat dateFormat, TimeFormat timeFormat,
 					  int timeZone, boolean isDST, String dst, int year, int month, int day, int hour, int minute, int second) {
 		this.timeSource = timeSource;
@@ -98,6 +111,8 @@ public class SystemTime {
 		
 		/**
 		 * Get TimeSource instance from String
+		 * @param x = String to get TimeSource instance from
+		 * @return TimeSource instance or null if error
 		 */
 		public static TimeSource match(String x) {
 			if (x.contains("0"))
@@ -129,6 +144,7 @@ public class SystemTime {
 		
 		/**
 		 * Returns String value of NTPServer instance
+		 * @return NTP server address
 		 */
 		public String getValue() {
 			return this.value;
@@ -136,6 +152,8 @@ public class SystemTime {
 		
 		/**
 		 * Get NTPServer instance from String
+		 * @param x = String to get NTPServer from
+		 * @return NTPServer instance or null if error
 		 */
 		public static NTPServer match(String x) {
 	        if (x == "time.nist.gov")
@@ -166,6 +184,7 @@ public class SystemTime {
 		
 		/**
 		 * Returns int value of DateFormat instance
+		 * @return Value of DateFormat instance in Integer
 		 */
 		public int getValue() {
 			return this.value;
@@ -173,6 +192,8 @@ public class SystemTime {
 		
 		/**
 		 * Get DateFormat instance from int
+		 * @param x = int to get DateFormat from
+		 * @return DateFormat instance or null if error
 		 */
 		public static DateFormat match(int x) {
 	        switch(x) {
@@ -188,6 +209,8 @@ public class SystemTime {
 		
 		/**
 		 * Get DateFormat instance from String
+		 * @param x = String to get DateFormat from
+		 * @return DateFormat instance or null if error
 		 */
 		public static DateFormat match(String x) {
 	        if (x.contains("0"))
@@ -240,6 +263,8 @@ public class SystemTime {
 		
 		/**
 		 * Get TimeFormat instance from String
+		 * @param x = String to get TimeFormat instance from
+		 * @return TimeFormat instance or null if error
 		 */
 		public static TimeFormat match(String x) {
 	        if (x.contains("0"))

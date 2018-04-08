@@ -48,8 +48,8 @@ public class NetParser {
 	
 	/**
 	 * Get value in specified tag
-	 * @param xml body
-	 * @param tag name
+	 * @param xml = xml body
+	 * @param tagName = tag name
 	 * @return element value
 	 */
 	// source: https://stackoverflow.com/questions/4076910/how-to-retrieve-element-value-of-xml-using-java

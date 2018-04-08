@@ -55,23 +55,23 @@ public class Foscam {
 	private final NetExecutor x;
 
 	/** Connect to a Foscam IP-camera without HTTPS
-	 * @param address
-	 * @param port
-	 * @param user
-	 * @param password
-	 * @throws ConnectException
+	 * @param address = Camera IPv4 address (IPv6 untested but should work as well)
+	 * @param port = Camera TCP port
+	 * @param user = User name
+	 * @param password = Password of the user
+	 * @throws ConnectException if connection fails
 	 */
 	public Foscam(String address, int port, String user, String password) throws ConnectException {
 		this(address, port, user, password, false);
 	}
 	
 	/** Connect to a Foscam IP-camera
-	 * @param address
-	 * @param port
-	 * @param user
-	 * @param password
-	 * @param https
-	 * @throws ConnectException
+	 * @param address = Camera IPv4 address (IPv6 untested but should work as well)
+	 * @param port = Camera TCP port
+	 * @param user = User name
+	 * @param password = Password of the user
+	 * @param https = To use HTTPS protocol or not
+	 * @throws ConnectException if connection fails
 	 */
 	public Foscam(String address, int port, String user, String password, boolean https) throws ConnectException {
 		// Check if address is valid and if device is active
@@ -139,7 +139,7 @@ public class Foscam {
 	
 	/**
 	 * "Set saturation of video"
-	 * @param hue (int 0-100)
+	 * @param saturation (int 0-100)
 	 * @return boolean if change succeeded or not
 	 */
 	public boolean setSaturation(final int saturation) {
@@ -230,7 +230,7 @@ public class Foscam {
 	
 	/**
 	 * Set frame shipping reference mode of H264 encoding stream
-	 * @param state (0=normal ref, 1=two seperated - four skipped)
+	 * @param mode (0=normal ref, 1=two seperated - four skipped)
 	 * @return boolean if change succeeded or not
 	 */
 	public boolean setH264FrameRefMode(final int mode) {
@@ -510,6 +510,7 @@ public class Foscam {
 	
 	/** 
 	 * Set Foscam's UPnP state
+	 * @param state = New state to assign to UPnP
 	 * @return True if succeeded
 	 */
 	public Boolean setUPnP(final boolean state) {
@@ -519,6 +520,7 @@ public class Foscam {
 	
 	/** 
 	 * Set Foscam's FTP config
+	 * @param ftpc = FTPConfig object
 	 * @return True if succeeded
 	 */
 	public Boolean setFTPConfig(final FTPConfig ftpc) {
@@ -535,6 +537,7 @@ public class Foscam {
 	
 	/** 
 	 * Test Foscam's FTP config (experimental, use at own risk)
+	 * @param ftpc = FTPConfig object
 	 * @return True if succeeded, false if not succeeded, null if http-get not succeeded or invalid.
 	 */
 	public Boolean testFTPConfig(final FTPConfig ftpc) {
@@ -583,6 +586,7 @@ public class Foscam {
 	
 	/** 
 	 * Set Foscam's P2P state
+	 * @param state = State to set P2P to
 	 * @return True if succeeded
 	 */
 	public Boolean setP2P(final boolean state) {
@@ -604,6 +608,7 @@ public class Foscam {
 	
 	/** 
 	 * Set Foscam's P2P port
+	 * @param value = New port to assign
 	 * @return True if succeeded
 	 */
 	public Boolean setP2PPort(final String value) {
@@ -671,8 +676,8 @@ public class Foscam {
 	}
 	
 	/** 
-	 * Get Foscam's infra led mode
-	 * @return "0" for auto or "1" for manual if succeeded, otherwise null
+	 * Get Foscam's name
+	 * @return Foscam's name
 	 */
 	public String getName() {
 		RxData out = nm.exec("getDevName", null);
@@ -683,8 +688,8 @@ public class Foscam {
 	}
 	
 	/** 
-	 * Set Foscam's infra led mode
-	 * @param mode 0 for auto or 1 for manual
+	 * Set Foscam's name
+	 * @param value = Name
 	 * @return True if succeeded
 	 */
 	public Boolean setName(final String value) {
@@ -695,7 +700,7 @@ public class Foscam {
 	/** 
 	 * Snap a picture and get raw jpeg data (experimental)
 	 * @return Raw jpeg image data.
-	 * @throws IOException 
+	 * @throws IOException if HTTP-GET fails.
 	 */
 	// Don't use nm.exec for this one, we want raw data.
 	public String snapPicture() throws IOException {
@@ -748,6 +753,8 @@ public class Foscam {
 	
 	/**
 	 * Get log entries
+	 * @param count = Number of logs to get (1-19)
+	 * @param offset = List offset
 	 * @return URL in a String.
 	 */
 	public ArrayList<String> getLogEntries(int count, final int offset) {
@@ -815,8 +822,8 @@ public class Foscam {
 	
 	/**
 	 * Set Foscam's main video stream type<br><br>
-	 * > 0 = H264<br>
-	 * > 1 = MotionJpeg
+	 * 0 = H264<br>
+	 * 1 = MotionJpeg
 	 * @param format (0=H264, 1=MJ)
 	 * @return True if succeeded
 	 */
@@ -845,7 +852,7 @@ public class Foscam {
 	
 	/**
 	 * Set Foscam's stream channel for the scheduled recording
-	 * @param streamType (int 0-3)
+	 * @param sc = StreamChannel object
 	 * @return True if succeeded
 	 */
 	public Boolean setScheduledRecordStreamChn(final StreamChannel sc) {
@@ -944,7 +951,7 @@ public class Foscam {
 	
 	/**
 	 * Add user account
-	 * @param Account object (with at least username, password and privilege assigned)
+	 * @param account = Account object (with at least username, password and privilege assigned)
 	 * @return True if succeeded, false if not succeeded
 	 */
 	public boolean addAccount(final Account account) {
@@ -965,8 +972,8 @@ public class Foscam {
 	
 	/**
 	 * Add user account
-	 * @param Credentials object
-	 * @param Privilege enum instance
+	 * @param creds = Credentials object
+	 * @param privilege = Privilege enum instance
 	 * @return True if succeeded, false if not succeeded
 	 */
 	public boolean addAccount(final Credentials creds, final Account.Privilege privilege) {
@@ -984,7 +991,7 @@ public class Foscam {
 	
 	/**
 	 * Delete user account
-	 * @param Account object with username that needs to be deleted
+	 * @param account = Account object with username that needs to be deleted
 	 * @return True if succeeded, false if not succeeded
 	 */
 	public boolean deleteAccount(final Account account) {
@@ -1000,7 +1007,7 @@ public class Foscam {
 	
 	/**
 	 * Delete user account
-	 * @param Credentials object with username that needs to be deleted
+	 * @param creds = Credentials object with username that needs to be deleted
 	 * @return True if succeeded, false if not succeeded
 	 */
 	public boolean deleteAccount(final Credentials creds) {
@@ -1013,7 +1020,7 @@ public class Foscam {
 	
 	/**
 	 * Delete user account
-	 * @param Username of user that needs to be deleted
+	 * @param username = Username of user that needs to be deleted
 	 * @return True if succeeded, false if not succeeded
 	 */
 	public boolean deleteAccount(final String username) {
@@ -1801,7 +1808,7 @@ public class Foscam {
 	
 	/**
 	 * Set Foscam's local alarm-record config
-	 * @param LocalAlarmRecordConfig object
+	 * @param larc = LocalAlarmRecordConfig object
 	 * @return True if succeeded
 	 */
 	public Boolean setLocalAlarmRecordConfig(final LocalAlarmRecordConfig larc) {
@@ -1831,7 +1838,7 @@ public class Foscam {
 	
 	/**
 	 * Set Foscam's snap configuration
-	 * @param SnapConfig object
+	 * @param sc = SnapConfig object
 	 * @return True if succeeded
 	 */
 	public Boolean setSnapConfig(final SnapConfig sc) {

@@ -22,9 +22,11 @@ public class FTPConfig {
 	public final String password;
 	
 	/** Construct a FTPConfig
-	 * @param ftpAddr
-	 * @param ftpPort
+	 * @param ftpAddr = FTP address
+	 * @param ftpPort = FTP port
 	 * @param mode as integer
+	 * @param userName = FTP user name
+	 * @param password = Password of FTP user
 	 */
 	public FTPConfig(final String ftpAddr, final String ftpPort, final String mode, final String userName, final String password) {
 		this.ftpAddr = ftpAddr;
@@ -35,9 +37,11 @@ public class FTPConfig {
 	}
 	
 	/** Construct a FTPConfig 
-	 * @param ftpAddr
-	 * @param ftpPort
-	 * @param mode as FTPMode instance
+	 * @param ftpAddr = FTP remote address
+	 * @param ftpPort = FTP remote port
+	 * @param mode = FTPMode instance
+	 * @param userName = FTP user name
+	 * @param password = Password of FTP user
 	 */
 	public FTPConfig(final String ftpAddr, final String ftpPort, final FTPMode mode, final String userName, final String password) {
 		this.ftpAddr = ftpAddr;
@@ -62,6 +66,7 @@ public class FTPConfig {
 		
 		/**
 		 * Returns int value of FTPMode instance
+		 * @return Value of FTPMode instance
 		 */
 		public int getValue() {
 			return this.value;

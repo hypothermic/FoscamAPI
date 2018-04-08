@@ -23,7 +23,14 @@ public class Info485 {
 	/** rs485 parity check */
 	public final String parity;
 
-	/** Constructor for a new Info485 instance. */
+	/** Constructor for a new Info485 instance.
+	 * @param protocol = Protocol
+	 * @param address = Address
+	 * @param baudRate = Baud rate
+	 * @param dataBit = Data bit
+	 * @param stopBit = Stop bit
+	 * @param parity = Parity check
+	 */
 	public Info485(final String protocol, final String address, final String baudRate,
 				   final String dataBit, final String stopBit, final String parity) {
 		this.protocol = protocol;

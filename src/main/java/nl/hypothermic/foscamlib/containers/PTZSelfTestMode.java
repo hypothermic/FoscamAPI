@@ -28,6 +28,7 @@ public enum PTZSelfTestMode {
 	
 	/**
 	 * Returns int value of PTZSelfTestMode instance
+	 * @return Value of PTZSelfTestMode
 	 */
 	public int getValue() {
 		return this.value;
@@ -35,6 +36,8 @@ public enum PTZSelfTestMode {
 	
 	/**
 	 * Get PTZSelfTestMode instance from int
+	 * @param x = int to get PTZSelfTestMode instance from
+	 * @return PTZSelfTestMode instance or null if error
 	 */
 	public static PTZSelfTestMode match(int x) {
         switch(x) {
