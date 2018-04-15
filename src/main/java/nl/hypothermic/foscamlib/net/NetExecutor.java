@@ -10,7 +10,7 @@ import java.net.URL;
 
 /******************************\
  * > NetExecutor.java		< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

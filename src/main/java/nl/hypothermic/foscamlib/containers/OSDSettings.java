@@ -2,7 +2,7 @@ package nl.hypothermic.foscamlib.containers;
 
 /******************************\
  * > OSDSettings.java		< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

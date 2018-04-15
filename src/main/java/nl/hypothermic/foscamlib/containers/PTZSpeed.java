@@ -2,7 +2,7 @@ package nl.hypothermic.foscamlib.containers;
 
 /******************************\
  * > PTZSpeed.java			< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

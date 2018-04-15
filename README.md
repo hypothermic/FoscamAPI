@@ -1,4 +1,4 @@
-# FoscamLib
+# FoscamAPI
 Easily connect to Foscam IP camera's with this lightweight Java library. One command is all it takes.  
 FoscamLib is suitable for all the HD cameras, including FI9821W, FI9818W, FI9801W, FI9802W and FI9805W.
 It is tested on the FI9900P.
@@ -17,7 +17,7 @@ camera.setSharpness(90);
 ```xml
 <repository>
   <id>foscamlib-mvn-repo</id>
-  <url>https://raw.github.com/hypothermic/foscamlib/mvn-repo/</url>
+  <url>https://raw.github.com/hypothermic/foscamapi/mvn-repo/</url>
 </repository>
 
 <dependency>
@@ -33,9 +33,13 @@ Here is a full list of commands:
 
 ```java
 // Image settings
+- getBrightness();
 - setBrightness(0-100);
+- getContrast();
 - setContrast(0-100);
+- getSaturation();
 - setSaturation(0-100);
+- getSharpness();
 - setSharpness(0-100);
 - resetImageSetting();
 
@@ -134,10 +138,16 @@ Here is a full list of commands:
 - setH264FrameRefMode(0-1)
 - getScheduleRecordStreamChn();
 - setScheduleRecordStreamChn(...);
+- reloadRecordIndex();
 - getMJStreamURL();
 
 - setSnapConfig();
 - getSnapConfig();
+
+- getSaveLocation();
+- setSaveLocation();
+- getFreeStorageCapacity();
+- getTotalStorageCapacity();
 
 // Account control
 - addAccount(...);
@@ -160,6 +170,10 @@ Here is a full list of commands:
 - setMotionDetectConfig(...);
 - getLocalAlarmRecordConfig();
 - setLocalAlarmRecordConfig(...);
+
+// Audio controls (not supported by 3518A based cameras)
+- getAudioVolume();
+- setAudioVolume();
 
 // PTZ controls
 - ptzMoveUp();
@@ -187,6 +201,14 @@ Here is a full list of commands:
 See [javadoc](https://hypothermic.nl/foscamlib/javadoc/) for more information and details about these features.
 
 ## Changelog
+v1.07
+- Added storage controls
+- Added audio volume controls
+- Added PTZ cruise controls
+- Added getters for image attributes
+- Renamed project from FoscamLib to FoscamAPI
+    - Maven artifactId was not renamed
+
 v1.06
 - Added RS485 controls
 - Added more PTZ controls

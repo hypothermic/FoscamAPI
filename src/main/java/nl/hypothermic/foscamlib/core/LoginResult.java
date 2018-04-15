@@ -2,7 +2,7 @@ package nl.hypothermic.foscamlib.core;
 
 /******************************\
  * > LoginResult.java		< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

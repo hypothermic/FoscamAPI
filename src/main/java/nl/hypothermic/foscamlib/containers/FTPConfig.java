@@ -4,7 +4,7 @@ import java.net.URLEncoder;
 
 /******************************\
  * > FTPConfig.java			< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

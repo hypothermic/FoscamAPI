@@ -2,7 +2,7 @@ package nl.hypothermic.foscamlib.containers;
 
 /******************************\
  * > Account.java			< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

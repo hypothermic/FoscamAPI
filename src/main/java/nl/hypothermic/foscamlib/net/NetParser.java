@@ -5,7 +5,7 @@ import nl.hypothermic.foscamlib.core.Result;
 
 /******************************\
  * > NetParser.java			< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

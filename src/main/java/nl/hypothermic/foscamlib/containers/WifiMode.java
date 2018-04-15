@@ -1,44 +1,43 @@
 package nl.hypothermic.foscamlib.containers;
 
 /******************************\
- * > ZoomSpeed.java			< *
+ * > WifiMode.java			< *
  * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 
 /**
- * Enum of PTZ speeds with their respective integers attached.
+ * Enum of Wi-Fi authenticate modes with their respective integers attached.
  */
-public enum ZoomSpeed {
+public enum WifiMode {
 	
-	SLOW(0),
-	NORMAL(1),
-	FAST(2);
+	/** Station */
+	STATION(0),
+	/** SoftAP */
+	SOFTAP(1);
 	
 	private final int value;
 	
-	private ZoomSpeed(final int value) {
+	private WifiMode(final int value) {
 		this.value = value;
 	}
 	
 	/**
-	 * Returns int value of PTZSpeed instance
+	 * Returns int value of AuthMode instance
 	 */
 	public int getValue() {
 		return this.value;
 	}
 	
 	/**
-	 * Get PTZSpeed instance from int
+	 * Get AuthMode instance from int
 	 */
-	public static ZoomSpeed match(int x) {
+	public static WifiMode match(int x) {
         switch(x) {
         case 0:
-        	return SLOW;
+            return STATION;
         case 1:
-        	return NORMAL;
-        case 2:
-        	return FAST;
+            return SOFTAP;
         }
         return null;
     }

@@ -14,7 +14,7 @@ import org.xml.sax.InputSource;
 
 /******************************\
  * > AccessPoint.java		< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 

@@ -1,6 +1,7 @@
 package nl.hypothermic.foscamlib;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import nl.hypothermic.foscamlib.containers.PortInfo;
 import nl.hypothermic.foscamlib.containers.SnapConfig;
 import nl.hypothermic.foscamlib.containers.SnapConfig.PicQuality;
 import nl.hypothermic.foscamlib.containers.SnapConfig.SaveLocation;
+import nl.hypothermic.foscamlib.containers.SnapConfig.SaveLocation.SetResult;
 import nl.hypothermic.foscamlib.containers.StreamChannel;
 import nl.hypothermic.foscamlib.containers.SystemTime;
 import nl.hypothermic.foscamlib.containers.SystemTime.DateFormat;
@@ -30,9 +32,10 @@ import nl.hypothermic.foscamlib.containers.WifiConfig;
 import nl.hypothermic.foscamlib.containers.WifiConfig.AuthMode;
 import nl.hypothermic.foscamlib.containers.WifiConfig.KeyFormat;
 import nl.hypothermic.foscamlib.containers.WifiConfig.NetType;
+import nl.hypothermic.foscamlib.containers.WifiMode;
+import nl.hypothermic.foscamlib.containers.ZoomSpeed;
 import nl.hypothermic.foscamlib.core.Result;
 import nl.hypothermic.foscamlib.core.RxData;
-import nl.hypothermic.foscamlib.containers.ZoomSpeed;
 import nl.hypothermic.foscamlib.exception.ConnectException;
 import nl.hypothermic.foscamlib.net.NetExecutor;
 import nl.hypothermic.foscamlib.net.NetManager;
@@ -40,7 +43,7 @@ import nl.hypothermic.foscamlib.net.NetParser;
 
 /******************************\
  * > Foscam.java			< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 
@@ -112,6 +115,18 @@ public class Foscam {
 	}
 	
 	/**
+	 * Get brightness of video
+	 * @return Brightness (int 0-100), or null if error.
+	 */
+	public Integer getBrightness() {
+		RxData out = nm.exec("getImageSetting", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "brightness"));
+	}
+	
+	/**
 	 * "Set contrast of video"
 	 * @param contrast (int 0-100)
 	 * @return boolean if change succeeded or not
@@ -122,6 +137,18 @@ public class Foscam {
 		}
 		RxData out = nm.exec("setContrast", new HashMap<String, String>() {{ put("contrast", contrast + ""); }});
 		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get contrast of video
+	 * @return Contrast (int 0-100), or null if error.
+	 */
+	public Integer getContrast() {
+		RxData out = nm.exec("getImageSetting", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "contrast"));
 	}
 	
 	/**
@@ -138,6 +165,18 @@ public class Foscam {
 	}
 	
 	/**
+	 * Get hue of video
+	 * @return Hue (int 0-100), or null if error.
+	 */
+	public Integer getHue() {
+		RxData out = nm.exec("getImageSetting", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "hue"));
+	}
+	
+	/**
 	 * "Set saturation of video"
 	 * @param saturation (int 0-100)
 	 * @return boolean if change succeeded or not
@@ -151,6 +190,18 @@ public class Foscam {
 	}
 	
 	/**
+	 * Get saturation of video
+	 * @return Saturation (int 0-100), or null if error.
+	 */
+	public Integer getSaturation() {
+		RxData out = nm.exec("getImageSetting", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "saturation"));
+	}
+	
+	/**
 	 * "Set sharpness of video"
 	 * @param sharpness (int 0-100)
 	 * @return boolean if change succeeded or not
@@ -161,6 +212,18 @@ public class Foscam {
 		}
 		RxData out = nm.exec("setSharpness", new HashMap<String, String>() {{ put("sharpness", sharpness + ""); }});
 		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get sharpness of video
+	 * @return Sharpness (int 0-100), or null if error.
+	 */
+	public Integer getSharpness() {
+		RxData out = nm.exec("getImageSetting", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "sharpness"));
 	}
 	
 	/**
@@ -416,7 +479,8 @@ public class Foscam {
 			}});
 		} else {
 			// Data is only for standard ports
-			out = nm.exec("getPortInfo", new HashMap<String, String>() {{
+			out = nm.exec("getPortInfo", new HashMap<String, String>() 
+			{{
 					put("webPort", pi.webPort);
 					put("mediaPort", pi.mediaPort);
 					put("httpsPort", pi.httpsPort);
@@ -1345,6 +1409,30 @@ public class Foscam {
 		return true;
 	}
 	
+	/**
+	 * PTZ: Start cruise on specific map
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param mapName Name of the cruise map
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean ptzStartCruise(final String mapName) {
+		RxData out = nm.exec("ptzStartCruise", new HashMap<String, String>() {{ put("mapName", mapName); }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * PTZ: Stop current cruise
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return boolean if cruise is stopped or not.
+	 */
+	public boolean ptzStopCruise() {
+		RxData out = nm.exec("ptzStopCruise", null);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
 	/** 
 	 * Get Foscam's PTZ move speed
 	 * @return PTZSpeed enum entry instance
@@ -1367,6 +1455,31 @@ public class Foscam {
 			return false;
 		}
 		RxData out = nm.exec("setPTZSpeed", new HashMap<String, String>() {{ put("speed", speed.getValue() + ""); }});
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get Foscam's PTZ Cruise Time
+	 * @return Cruise Time as integer
+	 */
+	public Integer ptzGetCruiseTime() {
+		RxData out = nm.exec("getCruiseTime", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "time"));
+	}
+	
+	/**
+	 * Set Foscam's PTZ Cruise Time
+	 * @param time Cruise Time as integer
+	 * @return True if succeeded
+	 */
+	public boolean ptzSetCruiseTime(final int time) {
+		RxData out = nm.exec("setCruiseTime", new HashMap<String, String>() {{ put("time", time + ""); }});
 		if (out.result != Result.SUCCESS) {
 			return false;
 		}
@@ -1761,6 +1874,72 @@ public class Foscam {
 		return true;
 	}
 	
+	// ---------- START: METHODS NEWER THAN USER GUIDE VERSION 1.3.0 ------------ //
+	
+	/** 
+	 * Synchronize the record indexes for playback
+	 * @return True if reload successful
+	 */
+	public boolean reloadRecordIndex() {
+		RxData out = nm.exec("reloadRecordindex", null);
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/** 
+	 * Get save location for recordings
+	 * <br><i>Also named getRecordPath in user guide.</i>
+	 * @return Camera's current save location
+	 */
+	public SaveLocation getSaveLocation() {
+		RxData out = nm.exec("getRecordPath", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return SaveLocation.fromInt(Integer.parseInt(p.getTagValue(out.xml, "path")));
+	}
+	
+	/** 
+	 * Set save location for recordings
+	 * <br><i>Also named setRecordPath in user guide.</i>
+	 * @return SetResult, or null if critical error occurs
+	 */
+	public SetResult setSaveLocation(final SaveLocation sl) {
+		RxData out = nm.exec("setRecordPath", new HashMap<String, String>() {{ put("path", sl.getValue() + ""); }});
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return SetResult.fromInt(Integer.parseInt(p.getTagValue(out.xml, "setResult")));
+	}
+	
+	/** 
+	 * Get the free capacity of current save location
+	 * @return Free capacity of current save location
+	 */
+	public BigInteger getFreeStorageCapacity() {
+		RxData out = nm.exec("getRecordPath", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new BigInteger(p.getTagValue(out.xml, "free"));
+	}
+	
+	/** 
+	 * Get the total capacity of current save location
+	 * @return Total capacity of current save location
+	 */
+	public BigInteger getTotalStorageCapacity() {
+		RxData out = nm.exec("getRecordPath", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new BigInteger(p.getTagValue(out.xml, "total"));
+	}
+	
+	// ---------- END ------------ //
+	
 	/** 
 	 * Get Foscam's motion detect configuration
 	 * @return MotionDetectConfig object (or null if not succeeded)
@@ -2143,5 +2322,73 @@ public class Foscam {
 	 */
 	public String getInterfaceURL() {
 		return protocol + "://" + address + ":" + port + "/cgi-bin/CGIProxy.fcgi";
+	}
+	
+	// ------- METHODS UNDER HERE ARE PLATFORM DEPENDENT, MIGHT NOT WORK FOR ALL PLATFORMS ------- //
+	
+	/**
+	 * Get current audio volume
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Integer between 0-100
+	 */
+	public Integer getAudioVolume() {
+		RxData out = nm.exec("getAudioVolume", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "volume"));
+	}
+	
+	/**
+	 * Set audio volume
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param value audio volume (0-100)
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setAudioVolume(final int value) {
+		if (value < 0 || value > 100) {
+			return false;
+		}
+		RxData out = nm.exec("setAudioVolume", new HashMap<String, String>() {{ put("volume", value + ""); }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get Wi-Fi mode
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Camera's current Wi-Fi mode (sta or softap)
+	 */
+	public WifiMode getWifiMode() {
+		RxData out = nm.exec("getWifiMode", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return WifiMode.match(Integer.parseInt(p.getTagValue(out.xml, "wifiMode")));
+	}
+	
+	/** 
+	 * Get temperature around the camera in celsius
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Temperature around camera in celsius, or null if error
+	 */
+	public Integer getTemperatureCelsius() {
+		RxData out = nm.exec("getTemperatureState", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "degree"));
+	}
+	
+	/** 
+	 * Get temperature around the camera in fahrenheit
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Temperature around camera in fahrenheit, or null if error
+	 */
+	public Double getTemperatureFahrenheit() {
+		RxData out = nm.exec("getTemperatureState", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return 32 + (Double.parseDouble(p.getTagValue(out.xml, "degree")) * 9 / 5);
 	}
 }

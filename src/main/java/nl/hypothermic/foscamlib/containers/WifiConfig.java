@@ -4,7 +4,7 @@ import nl.hypothermic.foscamlib.containers.AccessPoint.EncryptType;
 
 /******************************\
  * > WifiConfig.java		< *
- * FoscamLib by hypothermic	  *
+ * FoscamAPI by hypothermic	  *
  * www.github.com/hypothermic *
 \******************************/
 
