@@ -1,6 +1,6 @@
 # FoscamAPI
 Easily connect to Foscam IP camera's with this lightweight Java library. One command is all it takes.  
-FoscamLib is suitable for all the HD cameras, including FI9821W, FI9818W, FI9801W, FI9802W and FI9805W.
+FoscamAPI is suitable for all the HD cameras, including FI9821W, FI9818W, FI9801W, FI9802W and FI9805W.  
 It is tested on the FI9900P.
 
 ## Example
