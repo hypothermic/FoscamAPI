@@ -3,10 +3,10 @@
   <groupId>nl.hypothermic</groupId>
   <artifactId>foscamlib</artifactId>
   <versioning>
-    <release>1.06-RELEASE</release>
+    <release>1.07-RELEASE</release>
     <versions>
-      <version>1.06-RELEASE</version>
+      <version>1.07-RELEASE</version>
     </versions>
-    <lastUpdated>20180408025259</lastUpdated>
+    <lastUpdated>20180415123237</lastUpdated>
   </versioning>
 </metadata>
