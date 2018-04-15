@@ -256,13 +256,13 @@ v1.00
 - Initial release
 
 ## Troubleshooting
-If you are having issues with FoscamLib or any component:
+If you are having issues with FoscamAPI or any component:
 1. Make sure your camera firmware is up to date. Do not ignore this step.
 2. Check the [javadoc](https://hypothermic.nl/foscamlib/javadoc/) if you are using the method correctly.
 3. Open an [issue](/../../issues/) where you describe the problem you're having. Include your camera model and firmware version.
 
 ## Mentions
-FoscamLib is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
+FoscamAPI (previously named FoscamLib) is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
 
 ## License
 The license can be found [here](./LICENSE.txt) or in the root folder of the project.
