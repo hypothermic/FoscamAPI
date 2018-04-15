@@ -1,2 +1,3 @@
-# FoscamLib Maven Repository
-Contains releases, snapshots, etc.
+# FoscamAPI Maven Repository
+Contains releases, snapshots, etc.  
+Package name is `nl.hypothermic.foscamlib`
