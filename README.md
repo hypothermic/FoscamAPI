@@ -1,6 +1,6 @@
 # FoscamAPI
-Easily connect to Foscam IP camera's with this lightweight Java library. One command is all it takes.  
-FoscamAPI is suitable for all the HD cameras, including FI9821W, FI9818W, FI9801W, FI9802W and FI9805W.  
+Easily connect to Foscam IP cameras with this lightweight Java library. One command is all it takes.  
+FoscamAPI is suitable for all the IP cameras, including FI9821W, FI9818W, FI9801W, FI9802W, FI9805W and FosBaby P1.  
 It is tested on the FI9900P.
 
 ## Example
@@ -26,6 +26,20 @@ camera.setSharpness(90);
   <!-- If you're using Maven3, specify version num -->
   <version>LATEST</version>
 </dependency>
+```
+
+## Gradle dependency
+```gradle
+repositories {
+    maven {
+        url "https://raw.github.com/hypothermic/foscamapi/mvn-repo/"
+    }
+}
+
+dependencies {
+    // Note: use 'api' instead of 'compile' if you're using Android Studio.
+    compile group: 'nl.hypothermic', name: 'foscamlib', version: '1.07-RELEASE'
+}
 ```
 
 ## Features
@@ -193,6 +207,36 @@ Here is a full list of commands:
 - getPTZPrePointForSelfTest();
 - setPTZPrePointForSelfTest(name);
 
+// Cloud & push controls (not supported by 3518A based cameras)
+- getCloudConfig();
+- setCloudConfig(...);
+- getCloudServer();
+- setCloudServer(...);
+- testCloudServer();
+- refreshCloudToken();
+- refreshCloudQuota();
+- getCloudStreamLevel();
+- setCloudStreamLevel(0-100);
+- getCloudAuthcode();
+- isCloudEnabled();
+
+- getPushConfig();
+- setPushConfig(...);
+- getPushServer();
+- setPushServer(...);
+- testPushServer();
+- sendPush(...);
+- isPushEnabled();
+
+// Miscellaneous controls (not supported by all platforms, see javadoc!)
+- getHumidity();
+- getNightlightState();
+- setNightlightState(true/false);
+- getLedState();
+- setLedState(true/false);
+- getHDRState();
+- setHDRState(true/false);
+
 // Deprecated, kept for backwards compatibility
 - doesCameraSupportOnvif();
 - doesCameraSupportRtsp();
@@ -201,6 +245,13 @@ Here is a full list of commands:
 See [javadoc](https://hypothermic.nl/foscamlib/javadoc/) for more information and details about these features.
 
 ## Changelog
+v1.08
+- Added cloud controls
+- Added push controls
+- Added night light controls
+- Added humidity getter
+- Added HDR controls
+
 v1.07
 - Added storage controls
 - Added audio volume controls
@@ -263,6 +314,8 @@ If you are having issues with FoscamAPI or any component:
 
 ## Mentions
 FoscamAPI (previously named FoscamLib) is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Shenzhen Foscam Intelligent Technology Limited, or any of its subsidiaries or its affiliates. The official Foscam website can be found at https://www.foscam.com. The name “Foscam” as well as related names, marks, emblems and images are registered trademarks of Shenzhen Foscam Intelligent Technology Limited.
+
+If there are any legal issues, please contact me via GitHub or email (admin@hypothermic.nl)
 
 ## License
 The license can be found [here](./LICENSE.txt) or in the root folder of the project.

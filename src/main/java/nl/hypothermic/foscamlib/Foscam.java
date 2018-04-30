@@ -9,6 +9,8 @@ import java.util.List;
 
 import nl.hypothermic.foscamlib.containers.AccessPoint;
 import nl.hypothermic.foscamlib.containers.Account;
+import nl.hypothermic.foscamlib.containers.CloudConfig;
+import nl.hypothermic.foscamlib.containers.CloudConfig.CloudServer;
 import nl.hypothermic.foscamlib.containers.Credentials;
 import nl.hypothermic.foscamlib.containers.DeviceInfo;
 import nl.hypothermic.foscamlib.containers.FTPConfig;
@@ -18,6 +20,10 @@ import nl.hypothermic.foscamlib.containers.OSDSettings;
 import nl.hypothermic.foscamlib.containers.PTZSelfTestMode;
 import nl.hypothermic.foscamlib.containers.PTZSpeed;
 import nl.hypothermic.foscamlib.containers.PortInfo;
+import nl.hypothermic.foscamlib.containers.PushCommand;
+import nl.hypothermic.foscamlib.containers.PushConfig;
+import nl.hypothermic.foscamlib.containers.PushConfig.PushServer;
+import nl.hypothermic.foscamlib.containers.PushDevice;
 import nl.hypothermic.foscamlib.containers.SnapConfig;
 import nl.hypothermic.foscamlib.containers.SnapConfig.PicQuality;
 import nl.hypothermic.foscamlib.containers.SnapConfig.SaveLocation;
@@ -2390,5 +2396,367 @@ public class Foscam {
 			return null;
 		}
 		return 32 + (Double.parseDouble(p.getTagValue(out.xml, "degree")) * 9 / 5);
+	}
+	
+	/**
+	 * Get cloud config
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return CloudConfig instance
+	 */
+	public CloudConfig getCloudConfig() {
+		RxData out = nm.exec("getCloudConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new CloudConfig(p.getTagValue(out.xml, "isEnable"), CloudServer.match(p.getTagValue(out.xml, "cloudServer")), 
+							   p.getTagValue(out.xml, "code"), p.getTagValue(out.xml, "authAddr"), p.getTagValue(out.xml, "accessToken"), 
+							   p.getTagValue(out.xml, "quota"), p.getTagValue(out.xml, "userd"), p.getTagValue(out.xml, "statusMsg"));
+	}
+	
+	/**
+	 * Set cloud config
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param CloudConfig instance, only the final members (isEnabled, server, authCode) need to be assigned with values.
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setCloudConfig(final CloudConfig config) {
+		RxData out = nm.exec("setCloudConfig", new HashMap<String, String>() {{ 
+																				put("isEnable", config.isEnabled);
+																				put("cloudServer", config.server.getValue() + "");
+																				put("code", config.authCode); 
+																			 }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Test if cloud is enabled
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return True or false. Can return null if error occurred.
+	 */
+	public Boolean isCloudEnabled() {
+		RxData out = nm.exec("getCloudConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "isEnable").equals("1");
+	}
+	
+	/**
+	 * Get current Cloud Server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return CloudServer instance
+	 */
+	public CloudServer getCloudServer() {
+		RxData out = nm.exec("getCloudConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return CloudServer.match(p.getTagValue(out.xml, "cloudServer"));
+	}
+	
+	/**
+	 * Set Cloud Server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param CloudServer instance
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setCloudServer(final CloudServer server) {
+		RxData out = nm.exec("selectCloudServer", new HashMap<String, String>() {{
+																					//put("isEnable", 1 & Boolean.hashCode(isCloudEnabled()) >> 1 + "");
+																					put("isEnable", (isCloudEnabled() ? 1 : 0) + "");
+																					put("cloudServer", server.getValue() + ""); 
+																				}});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get authentication code from cloud server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Authentication code from server
+	 */
+	public String getCloudAuthcode() {
+		RxData out = nm.exec("getCloudConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "code");
+	}
+	
+	/**
+	 * Refresh cloud token
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * <br><b>NOTE: </b> Call this function, then call getCloudConfig 10s later to find accessToken
+	 * @return True if refresh succeeded, false if not succeeded
+	 */
+	public boolean refreshCloudToken() {
+		final String authcode = this.getCloudAuthcode();
+		if (authcode.equals("")) {
+			return false; // cloud not set up correctly
+		}
+		RxData out = nm.exec("getCloudToken", new HashMap<String, String>() {{
+																				put("isEnable", (isCloudEnabled() ? 1 : 0) + "");
+																				put("cloudServer", getCloudServer().getValue() + "");
+																				put("code", authcode);
+																			}});
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Refresh cloud quota and userd
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * <br><b>NOTE: </b> Call this function, then call getCloudConfig 10s later to find quota and userd
+	 * @return True if refresh succeeded, false if not succeeded
+	 */
+	public boolean refreshCloudQuota() {
+		RxData out = nm.exec("getCloudQuota", new HashMap<String, String>() {{
+																				put("isEnable", (isCloudEnabled() ? 1 : 0) + "");
+																				put("cloudServer", getCloudServer().getValue() + "");
+																			}});
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Refresh cloud quota and userd
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * <br><b>NOTE: </b> Call this function, then call getCloudConfig 10s later to find statusMsg
+	 * @return True if refresh succeeded, false if not succeeded
+	 */
+	public boolean testCloudServer() {
+		RxData out = nm.exec("testCloudServer", new HashMap<String, String>() {{
+																				put("isEnable", (isCloudEnabled() ? 1 : 0) + "");
+																				put("cloudServer", getCloudServer().getValue() + "");
+																			  }});
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Get cloud stream level
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return Integer between 0-100
+	 */
+	public Integer getCloudStreamLevel() {
+		RxData out = nm.exec("getCloudStreamLevel", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "level"));
+	}
+	
+	/**
+	 * Set cloud stream level
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param value cloud stream level (0-100)
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setCloudStreamLevel(final int value) {
+		if (value < 0 || value > 100) {
+			return false;
+		}
+		RxData out = nm.exec("setCloudStreamLevel", new HashMap<String, String>() {{ put("level", value + ""); }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get push config
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return PushConfig instance
+	 */
+	public PushConfig getPushConfig() {
+		RxData out = nm.exec("getPushConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new PushConfig(p.getTagValue(out.xml, "isEnable"), PushServer.match(p.getTagValue(out.xml, "pushServer")), p.getTagValue(out.xml, "statusMsg"));
+	}
+	
+	/**
+	 * Set push config
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param PushConfig instance, only the final members (isEnabled and server) need to be assigned with values.
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setPushConfig(final PushConfig config) {
+		RxData out = nm.exec("setPushConfig", new HashMap<String, String>() {{ 
+																				put("isEnable", config.isEnabled);
+																				put("pushServer", config.server.getValue() + "");
+																			}});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Test if push is enabled
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return True if enabled, false if disabled, null if error occurred
+	 */
+	public Boolean isPushEnabled() {
+		RxData out = nm.exec("getPushConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "isEnable").equals("1");
+	}
+	
+	/**
+	 * Get push server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @return PushServer instance, can return null if it's not set properly!
+	 */
+	public PushServer getPushServer() {
+		RxData out = nm.exec("getPushConfig", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		System.out.println("DEBUG: " + p.getTagValue(out.xml, "pushServer"));
+		return PushServer.match(p.getTagValue(out.xml, "pushServer"));
+	}
+	
+	/**
+	 * Set push server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param server PushServer instance
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean setPushServer(final PushServer server) {
+		RxData out = nm.exec("setPushConfig", new HashMap<String, String>() {{
+																					//put("isEnable", 1 & Boolean.hashCode(isPushEnabled()) >> 1 + "");
+																					put("isEnable", (isPushEnabled() ? 1 : 0) + "");
+																					put("pushServer", server.getValue() + ""); 
+																			}});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Test push server
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * <br><b>NOTE: </b> Call this function, then call getPushConfig 10s later to find statusMsg
+	 * @return True if refresh succeeded, false if not succeeded
+	 */
+	public boolean testPushServer() {
+		final PushServer ps = getPushServer();
+		if (ps == null) {
+			return false; // user did not setup push correctly
+		}
+		RxData out = nm.exec("testPushServer", new HashMap<String, String>() {{
+																				put("isEnable", (isCloudEnabled() ? 1 : 0) + "");
+																				put("pushServer", ps.getValue() + "");
+																			 }});
+		if (out.result != Result.SUCCESS) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Send push (equivalent to pushOperate)
+	 * <br><br><b>NOTE: </b> Platform dependent, does not work on camera's with the 3518A chipset!
+	 * @param command PushCommand instance
+	 * @return boolean if change succeeded or not
+	 */
+	public boolean sendPush(final PushCommand command, final PushDevice device, final int channelId, final int userId) {
+		RxData out = nm.exec("pushOperate", new HashMap<String, String>() {{ 
+																				put("cmd_oper", command.getValue() + "");
+																				put("device_type", device.getValue() + "");
+																				put("channel_id", channelId + "");
+																				put("user_id", userId + "");
+																		  }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/**
+	 * Get humidity in %
+	 * <br><br><b>NOTE: </b> Platform dependent, check if your camera has a humidity sensor. It is only confirmed working on FosBaby_P1 and FI9900P!
+	 * @return Integer between 0-100, null if error occurred
+	 */
+	public Integer getHumidity() {
+		RxData out = nm.exec("getHumidityState", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return Integer.parseInt(p.getTagValue(out.xml, "humidity"));
+	}
+	
+	/** 
+	 * Get Night Light state
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1!
+	 * <br><b>NOTE: </b> Untested
+	 * @return True if night light is enabled, false if disabled, null if error occured
+	 */
+	public Boolean getNightlightState() {
+		RxData out = nm.exec("getNightLightState", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "state").contains("1");
+	}
+	
+	/** 
+	 * Set Night Light state
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1!
+	 * <br><b>NOTE: </b> Untested
+	 * @param state New state to assign to the Night Light
+	 * @return True if succeeded, false if not succeeded or error occured.
+	 */
+	public Boolean setNightlightState(final boolean state) {
+		RxData out = nm.exec("setNightLightState", new HashMap<String, String>() {{ put("state", (state ? 1 : 0) + ""); }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get state of System and Net LED's
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1 and FI9900P!
+	 * <br><b>NOTE: </b> Untested
+	 * @return True if LED's are enabled, false if disabled, null if error occured
+	 */
+	public Boolean getLedState() {
+		RxData out = nm.exec("getLedEnableState", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "isEnable").contains("1");
+	}
+	
+	/** 
+	 * Set state of System and Net LED's
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1 and FI9900P!
+	 * <br><b>NOTE: </b> Untested
+	 * @param state New state to assign to the LED's
+	 * @return True if succeeded, false if not succeeded or error occured.
+	 */
+	public Boolean setLedState(final boolean state) {
+		RxData out = nm.exec("setLedEnableState", new HashMap<String, String>() {{ put("mode", (state ? 1 : 0) + ""); }});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get state of HDR
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1 and FI9900P!
+	 * @return True if HDR is enabled, false if disabled, null if error occured
+	 */
+	public Boolean getHDRState() {
+		RxData out = nm.exec("getHdrMode", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return p.getTagValue(out.xml, "mode").contains("1");
+	}
+	
+	/** 
+	 * Set state of HDR
+	 * <br><br><b>NOTE: </b> Platform dependent, it is only confirmed working on FosBaby_P1 and FI9900P!
+	 * @param state New state to assign to the HDR
+	 * @return True if succeeded, false if not succeeded or error occured.
+	 */
+	public Boolean setHDRState(final boolean state) {
+		RxData out = nm.exec("setHdrMode", new HashMap<String, String>() {{ put("mode", (state ? 1 : 0) + ""); }});
+		return out.result == Result.SUCCESS;
 	}
 }

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.hypothermic</groupId>
   <artifactId>foscamlib</artifactId>
-  <version>1.07-RELEASE</version>
+  <version>1.08-RELEASE</version>
   <name>FoscamAPI</name>
   <url>https://github.com/hypothermic/foscamapi</url>
   <description>Java Library for Foscam IP camera's.
