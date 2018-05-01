@@ -1,5 +1,5 @@
 # FoscamAPI Pages
-To view the documentation, head over to [https://hypothermic.github.io/foscamapi](https://hypothermic.github.io/foscamapi)
+To view the documentation, head over to [https://hypothermic.github.io/FoscamAPI](https://hypothermic.github.io/FoscamAPI)
 
 ## Mentions
 
