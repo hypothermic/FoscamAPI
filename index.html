@@ -1,17 +1,19 @@
 <html lang="en-us">
     <head>
         <meta charset="UTF-8">
-        <title>FoscamAPI</title>
+        <title>FoscamAPI for Java</title>
+        <meta name="description" content="Easily connect to any Foscam IP camera with this lightweight Java library. FoscamAPI is Open Source and free to use.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#157878">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="css/normalize.css" media="screen">
         <link rel="stylesheet" type="text/css" href="css/cayman.css" media="screen">
         <link rel="stylesheet" type="text/css" href="css/github-light.css" media="screen">
+        <link rel="canonical" href="https://hypothermic.github.io/foscamapi">
     </head>
     <body>
         <section class="page-header">
-            <h1 class="project-name">FoscamAPI<h1>
+            <h1 class="project-name">FoscamAPI</h1>
             <h2 class="project-tagline">Easy to use | Efficient | Lightweight</h2>
             <a class="btn" href="https://github.com/hypothermic/foscamapi">View on GitHub</a>
             <a class="btn" href="https://github.com/hypothermic/foscamapi">Maven</a>
@@ -20,18 +22,18 @@
         </section>
         <section class="main-content">
             <p>
-                Easily connect to your Foscam IP cameras with this lightweight Java library. One command is all it takes.<br>
-                FoscamAPI is suitable for all Foscam IP cameras, including FI9821W, FI9818W, FI9801W, FI9802W, FI9805W and FosBaby P1.<br>
+                Easily connect to your Foscam IP cameras with this lightweight Java library. One command is all it takes. 
+                FoscamAPI is suitable for all Foscam IP cameras.
                 It is tested on the FI9900P.<br>
             </p>
             <div class="highlight highlight-Java">
                 <pre>
-                    // Connect to the camera
-                    Foscam camera <span class="pl-k">= new</span> Foscam(<span class="pl-s">"192.168.1.40"</span>, <span class="pl-s">88</span>, <span class="pl-s">"username"</span>, <span class="pl-s">"password"</span>);
-                    
-                    // Do whatever you want
-                    camera.setSharpness(90);
-                </pre>
+// Connect to the camera
+Foscam camera <span class="j-keyword">= new</span> Foscam(<span class="j-String">"192.168.1.40"</span>, <span class="j-int">88</span>, <span class="j-String">"username"</span>, <span class="j-String">"password"</span>);
+
+// Do whatever you want
+camera.setSharpness(<span class="j-int">90</span>);
+...             </pre>
             </div>
         </section>
     </body>
