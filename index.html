@@ -14,7 +14,7 @@
             <h1 class="project-name"><a href="index.html" style="color: rgb(255,255,255); text-decoration:none">FoscamAPI</a></h1>
             <h2 class="project-tagline">Easy to use | Efficient | Lightweight</h2>
             <a class="btn" href="https://github.com/hypothermic/foscamapi">View on GitHub</a>
-            <a class="btn" href="https://github.com/hypothermic/foscamapi">Maven</a>
+            <a class="btn" href="#maven">Maven</a>
             <a class="btn" href="https://github.com/hypothermic/foscamapi">Gradle</a>
             <a class="btn" href="https://github.com/hypothermic/foscamapi/releases/">Download</a>
         </section>
@@ -43,6 +43,44 @@
                     <li>Nightlight controls are only supported by FosBaby P1</li>
                 </ul>
                 These exceptions are also described in the Javadoc.
+            </p>
+            <hr>
+            <p id="maven">
+                <h2>Maven dependency</h2>
+                <p>Use FoscamAPI in your Maven project.</p>
+                <div class="highlight highlight-xml">
+                    <!-- HTML, you fucking stupid language, do I have to use lt and gt's for everything here? Can't you have a tag where xml is supported or something? -->
+                    <pre lang="xml">
+&lt;repository&gt;
+  &lt;id>foscamlib-mvn-repo&lt;/id&gt;
+  &lt;url&gt;https://raw.github.com/hypothermic/foscamapi/mvn-repo/&lt;/url&gt;
+&lt;/repository&gt;
+
+&lt;dependency>
+  &lt;groupId&gt;nl.hypothermic&lt;/groupId&gt;
+  &lt;artifactId&gt;foscamlib&lt;/artifactId&gt;
+  &lt;!-- If you're using Maven3, specify version num --&gt;
+  &lt;version&gt;LATEST&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+                </div>
+            </p>
+            <hr>
+            <p id="gradle">
+                <h2>Gradle dependency</h2>
+                <p>Use FoscamAPI in your Gradle or Android Studio project.</p>
+                <div class="highlight highlight-json">
+                    <pre lang="json">
+repositories {
+    maven {
+        url "https://raw.github.com/hypothermic/foscamapi/mvn-repo/"
+    }
+}
+
+dependencies {
+    // Note: use 'api' instead of 'compile' if you're using Android Studio.
+    compile group: 'nl.hypothermic', name: 'foscamlib', version: '1.07-RELEASE'
+}</pre>
+                </div>
             </p>
             <hr>
             <p>
