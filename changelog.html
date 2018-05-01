@@ -19,15 +19,81 @@
             <a class="btn" href="https://github.com/hypothermic/foscamapi/releases/">Download</a>
         </section>
         <section class="main-content">
-            <h2>Credits</h2>
             <p>
-                FoscamAPI Pages uses a modified version of the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://github.com/jasonlong/">jasonlong</a>, which is licensed under a <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International</a> license.
+                <h2>Changelog</h2>
+                Full changelog:
+                <ul>
+                    <li>v1.08 <ul>
+                        <li>Added cloud controls</li>
+                        <li>Added push controls</li>
+                        <li>Added nightlight controls</li>
+                        <li>Added humidity getter</li>
+                        <li>Added HDR controls</li>
+                    </ul></li>
+                    <li>v1.07 <ul>
+                        <li>Added storage controls</li>
+                        <li>Added audio volume controls</li>
+                        <li>Added PTZ cruise controls</li>
+                        <li>Added getters for image attributes</li>
+                        <li>Renamed project from FoscamLib to FoscamAPI<ul>
+                            <li>Maven artifactId was not renamed</li>
+                        </ul></li>
+                    </ul></li>
+                    <li>v1.06 <ul>
+                        <li>Added RS485 controls</li>
+                        <li>Added more PTZ controls</li>
+                        <li>Added many Wi-Fi controls</li>
+                        <li>Added system time controls</li>
+                        <li>Reworked NetManager execution into a single method, old methods are now deprecated</li>
+                        <li>Reworked all methods in Foscam.java to use the new exec() method</li>
+                        <li>Moved core components to "core" package</li>
+                        <li>Deprecated NetManager exec() methods are now removed</li>
+                    </ul></li>
+                    <li>v1.05 <ul>
+                        <li>Added user account controls</li>
+                        <li>Added local alarm record config</li>
+                        <li>Added PTZ controls and PTZ speed controls</li>
+                        <li>Added motion detection functionality (beta)<ul>
+                            <li>Motion detect config</li>
+                            <li>Motion detect schedule map</li>
+                            <li>Motion detect area map</li>
+                        </ul></li>
+                        <li>Added H264 stream settings</li>
+                        <li>Fixed NetExecutor (see commit changes)</li>
+                    </ul></li>
+                    <li>v1.04 <ul>
+                        <li>Added camera stream controls.</li>
+                        <li>Created Maven Repository.</li>
+                    </ul></li>
+                    <li>v1.03 <ul>
+                        <li>Added all info flags</li>
+                        <li>Added DeviceInfo</li>
+                        <li>doesCameraSupportOnvif and Rtsp are now deprecated.</li>
+                        <li>Added firewall controls</li>
+                        <li>Added log controls</li>
+                        <li>Added config exporting control</li>
+                        <li>Added snapPicture()</li>
+                    </ul></li>
+                    <li>v1.02 <ul>
+                        <li>Added FTP configuration controls</li>
+                        <li>Added Infrared light and config controls</li>
+                        <li>Added getName and setName</li>
+                    </ul></li>
+                    <li>v1.01 <ul>
+                        <li>Added PortInfo and port getters</li>
+                        <li>Added get/set for UPnP</li>
+                    </ul></li>
+                    <li>v1.00 <ul>
+                        <li>Initial release</li>
+                    </ul></li>
+                </ul>
             </p>
+            <hr>
             <p>
                 <a href="#top">Back to top</a
             </p>
             <footer class="site-footer">
-                <span class="site-footer-owner">Copyright (c) 2017, 2018 hypothermic </span>
+                <span class="site-footer-owner">Copyright (c) 2017, 2018 hypothermic. All rights reserved.</span>
                 <span class="site-footer-credits">
                     All trademarks are property of their respective owners in the US and other countries.<br>
                     <a href="legal.html">Legal disclaimer | </a>
@@ -40,6 +106,9 @@
     <style>
 /* =========== cayman.css =========== */
 /* Start adjustments */
+.j-normal {
+    color: #24292e;
+}
 .j-keyword {
     color: #d73a49; /* or: #f43629 */
 }
@@ -235,7 +304,7 @@ a {
       content: normal; }
   .main-content ul,
   .main-content ol {
-    margin-top: 0; }
+    margin-top: 0.25rem; } /* Original: 0rem */
   .main-content blockquote {
     padding: 0 1rem;
     margin-left: 0;
@@ -271,7 +340,7 @@ a {
   .main-content hr {
     height: 2px;
     padding: 0;
-    margin: 1rem 0;
+    margin: 2.2rem 0; /* Original: 1rem */
     background-color: #eff0f1;
     border: 0; }
 

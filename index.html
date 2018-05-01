@@ -42,6 +42,7 @@
                     <li>Humidity, LED and HDR controls are only supported by FosBaby P1 and FI9900P</li>
                     <li>Nightlight controls are only supported by FosBaby P1</li>
                 </ul>
+                These exceptions are also described in the Javadoc.
             </p>
             <hr>
             <p>
@@ -55,6 +56,30 @@
             </p>
             <hr>
             <p>
+                <h2>Changelog</h2>
+                Changes made in the latest versions:
+                <ul>
+                    <li>v1.08 <ul>
+                        <li>Added cloud controls</li>
+                        <li>Added push controls</li>
+                        <li>Added nightlight controls</li>
+                        <li>Added humidity getter</li>
+                        <li>Added HDR controls</li>
+                    </ul></li>
+                    <li>v1.07 <ul>
+                        <li>Added storage controls</li>
+                        <li>Added audio volume controls</li>
+                        <li>Added PTZ cruise controls</li>
+                        <li>Added getters for image attributes</li>
+                        <li>Renamed project from FoscamLib to FoscamAPI<ul>
+                            <li>Maven artifactId was not renamed</li>
+                        </ul></li>
+                    </ul></li>
+                </ul>
+                <a href="changelog.html">See earlier versions</a>
+            </p>
+            <hr>
+            <p>
                 <h2>Common sources</h2>
                 Useful information for fellow developers:
                 <ul>
@@ -64,7 +89,7 @@
             </p>
             <hr>
             <p>
-                <a href="#top"><br>Back to top</a
+                <a href="#top">Back to top</a
             </p>
             <footer class="site-footer">
                 <span class="site-footer-owner">Copyright (c) 2017, 2018 hypothermic. All rights reserved.</span>
@@ -278,7 +303,7 @@ a {
       content: normal; }
   .main-content ul,
   .main-content ol {
-    margin-top: 0; }
+    margin-top: 0.25rem; } /* Original: 0rem */
   .main-content blockquote {
     padding: 0 1rem;
     margin-left: 0;
@@ -314,7 +339,7 @@ a {
   .main-content hr {
     height: 2px;
     padding: 0;
-    margin: 1rem 0;
+    margin: 2.2rem 0; /* Original: 1rem */
     background-color: #eff0f1;
     border: 0; }
 
