@@ -27,11 +27,11 @@
             <div class="highlight highlight-Java">
                 <pre>
 // Connect to the camera
-Foscam camera <span class="j-keyword">= new</span> Foscam(<span class="j-String">"192.168.1.40"</span>, <span class="j-int">88</span>, <span class="j-String">"username"</span>, <span class="j-String">"password"</span>);
+<span class="j-normal">Foscam camera</span> <span class="j-keyword">= new</span> <span class="j-normal">Foscam</span>(<span class="j-String">"192.168.1.40"</span>, <span class="j-int">88</span>, <span class="j-String">"username"</span>, <span class="j-String">"password"</span>);
 
 // Do whatever you want
-camera.setSharpness(<span class="j-int">90</span>);
-...             </pre>
+<span class="j-normal">camera.setSharpness</span>(<span class="j-int">90</span>);
+<span class="j-normal">...</span>             </pre>
             </div>
             <hr>
             <p>
@@ -80,6 +80,9 @@ camera.setSharpness(<span class="j-int">90</span>);
     <style>
 /* =========== cayman.css =========== */
 /* Start adjustments */
+.j-normal {
+    color: #24292e;
+}
 .j-keyword {
     color: #d73a49; /* or: #f43629 */
 }
