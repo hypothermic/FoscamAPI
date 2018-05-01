@@ -1,7 +1,8 @@
 # FoscamAPI
 Easily connect to Foscam IP cameras with this lightweight Java library. One command is all it takes.  
 FoscamAPI is suitable for all the IP cameras, including FI9821W, FI9818W, FI9801W, FI9802W, FI9805W and FosBaby P1.  
-It is tested on the FI9900P.
+It is tested on the FI9900P.  
+More details are on [the pages](https://hypothermic.github.io/FoscamAPI/).
 
 ## Example
 ```java
@@ -23,7 +24,7 @@ camera.setSharpness(90);
 <dependency>
   <groupId>nl.hypothermic</groupId>
   <artifactId>foscamlib</artifactId>
-  <!-- If you're using Maven3, specify version num -->
+  <!-- If you're using Maven3, specify version tag -->
   <version>LATEST</version>
 </dependency>
 ```
@@ -38,7 +39,7 @@ repositories {
 
 dependencies {
     // Note: use 'api' instead of 'compile' if you're using Android Studio.
-    compile group: 'nl.hypothermic', name: 'foscamlib', version: '1.07-RELEASE'
+    compile group: 'nl.hypothermic', name: 'foscamlib', version: '1.08-RELEASE'
 }
 ```
 
