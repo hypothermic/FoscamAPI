@@ -250,7 +250,6 @@ public class Foscam {
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
-		System.out.println(out.xml);
 		return p.getTagValue(out.xml, "isMirror").contains("1");
 	}
 	
