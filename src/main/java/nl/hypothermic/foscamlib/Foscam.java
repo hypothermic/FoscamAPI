@@ -250,7 +250,8 @@ public class Foscam {
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
-		return p.getTagValue(out.xml, "isMirror") == "1";
+		System.out.println(out.xml);
+		return p.getTagValue(out.xml, "isMirror").contains("1");
 	}
 	
 	/**
@@ -262,7 +263,7 @@ public class Foscam {
 		if (out.result != Result.SUCCESS) {
 			return null;
 		}
-		return p.getTagValue(out.xml, "isFlip") == "1";
+		return p.getTagValue(out.xml, "isFlip").contains("1");
 	}
 	
 	/**
