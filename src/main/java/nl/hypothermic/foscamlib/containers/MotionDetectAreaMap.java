@@ -1,5 +1,7 @@
 package nl.hypothermic.foscamlib.containers;
 
+import java.util.Arrays;
+
 /******************************\
  * > MotionDetectAreaMap.java *
  * FoscamLib by hypothermic	  *
@@ -66,5 +68,9 @@ public class MotionDetectAreaMap {
 		}
 		areamap[x][y] = state ? 1 : 0;
 		return true;
+	}
+
+	@Override public String toString() {
+		return "MotionDetectAreaMap [areamap=" + Arrays.toString(this.areamap) + "]";
 	}
 }

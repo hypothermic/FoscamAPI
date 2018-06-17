@@ -9,18 +9,18 @@ package nl.hypothermic.foscamlib.containers;
 public class PushConfig {
 	
 	/** Is push enabled (0-1) */
-	public final String isEnabled;
+	public String isEnabled;
 	/** Current push server */
-	public final PushServer server;
+	public PushServer server;
 	/** Status message from cloud server <br><b>NOTE: </b> Call testPushServer() to find this */
 	public String statusMsg;
 	
-	public PushConfig(final String isEnabled, final PushServer server) {
+	public PushConfig(String isEnabled, PushServer server) {
 		this.isEnabled = isEnabled;
 		this.server = server;
 	}
 	
-	public PushConfig(final String isEnabled, final PushServer server, final String statusMsg) {
+	public PushConfig(String isEnabled, PushServer server, String statusMsg) {
 		this.isEnabled = isEnabled;
 		this.server = server;
 		this.statusMsg = statusMsg;
@@ -59,5 +59,9 @@ public class PushConfig {
 			if (value.contains("1")) return BAIDU;
 			return null;
 		}
+	}
+
+	@Override public String toString() {
+		return "PushConfig [isEnabled=" + this.isEnabled + ", server=" + this.server + ", statusMsg=" + this.statusMsg + "]";
 	}
 }

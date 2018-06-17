@@ -274,4 +274,8 @@ public class SystemTime {
 	        return null;
 	    }
 	}
+
+	@Override public String toString() {
+		return "SystemTime [timeSource=" + this.timeSource + ", ntpServer=" + this.ntpServer + ", dateFormat=" + this.dateFormat + ", timeFormat=" + this.timeFormat + ", timeZone=" + this.timeZone + ", isDST=" + this.isDST + ", dst=" + this.dst + ", year=" + this.year + ", month=" + this.month + ", day=" + this.day + ", hour=" + this.hour + ", minute=" + this.minute + ", second=" + this.second + "]";
+	}
 }

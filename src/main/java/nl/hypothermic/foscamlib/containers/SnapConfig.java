@@ -8,10 +8,10 @@ package nl.hypothermic.foscamlib.containers;
 
 public class SnapConfig {
 	
-	public final PicQuality pq;
-	public final SaveLocation sl;
+	public PicQuality pq;
+	public SaveLocation sl;
 	
-	public SnapConfig(final PicQuality pq, final SaveLocation sl) {
+	public SnapConfig(PicQuality pq, SaveLocation sl) {
 		this.pq = pq;
 		this.sl = sl;
 	}
@@ -119,5 +119,9 @@ public class SnapConfig {
 			      throw new IllegalArgumentException("Not found.");
 			}
 		}
+	}
+
+	@Override public String toString() {
+		return "SnapConfig [pq=" + this.pq + ", sl=" + this.sl + "]";
 	}
 }

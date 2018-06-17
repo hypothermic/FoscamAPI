@@ -8,16 +8,15 @@ package nl.hypothermic.foscamlib.containers;
 
 public class MotionDetectConfig {
 	
-	public final int isEnable;
-	public final Linkage linkage;
-	public final int snapInterval;
-	public final Sensitivity sens;
-	public final int triggerInterval;
-	public final MotionDetectScheduleMap mdsm;
-	public final MotionDetectAreaMap mdam;
+	public int isEnable;
+	public Linkage linkage;
+	public int snapInterval;
+	public Sensitivity sens;
+	public int triggerInterval;
+	public MotionDetectScheduleMap mdsm;
+	public MotionDetectAreaMap mdam;
 	
-	public MotionDetectConfig(final int isEnable, final Linkage linkage, final int snapInterval, final Sensitivity sens, 
-							  final int triggerInterval, final MotionDetectScheduleMap mdsm, final MotionDetectAreaMap mdam) {
+	public MotionDetectConfig(int isEnable, Linkage linkage, int snapInterval, Sensitivity sens, int triggerInterval, MotionDetectScheduleMap mdsm, MotionDetectAreaMap mdam) {
 		this.isEnable = isEnable;
 		this.linkage = linkage;
 		this.snapInterval = snapInterval;
@@ -76,5 +75,9 @@ public class MotionDetectConfig {
 		public int getValue() {
 			return this.value;
 		}
+	}
+
+	@Override public String toString() {
+		return "MotionDetectConfig [isEnable=" + this.isEnable + ", linkage=" + this.linkage + ", snapInterval=" + this.snapInterval + ", sens=" + this.sens + ", triggerInterval=" + this.triggerInterval + ", mdsm=" + this.mdsm + ", mdam=" + this.mdam + "]";
 	}
 }

@@ -38,7 +38,7 @@ public class AccessPoint {
 	 * @param isEncrypt = Is the AP encrypted
 	 * @param encryptType = Encryption type of the AP
 	 */
-	public AccessPoint(final String ssid, final String mac, final int quality, final boolean isEncrypt, final EncryptType encryptType) {
+	public AccessPoint(String ssid, String mac, int quality, boolean isEncrypt, EncryptType encryptType) {
 		this.ssid = ssid;
 		this.mac = mac;
 		this.quality = quality;
@@ -98,5 +98,9 @@ public class AccessPoint {
 	        }
 	        return null;
 	    }
+	}
+
+	@Override public String toString() {
+		return "AccessPoint [ssid=" + this.ssid + ", mac=" + this.mac + ", quality=" + this.quality + ", isEncrypt=" + this.isEncrypt + ", encryptType=" + this.encryptType + "]";
 	}
 }

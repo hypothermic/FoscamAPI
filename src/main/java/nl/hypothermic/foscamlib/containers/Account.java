@@ -22,7 +22,7 @@ public class Account {
 	 * @param password = Password of user
 	 * @param privilege = Privilege level of user
 	 */
-	public Account(final String username, final String password, final Privilege privilege) {
+	public Account(String username, String password, Privilege privilege) {
 		this.username = username;
 		this.password = password;
 		this.privilege = privilege;
@@ -49,5 +49,9 @@ public class Account {
 		public int getValue() {
 			return this.value;
 		}
+	}
+
+	@Override public String toString() {
+		return "Account [username=" + this.username + ", password=" + this.password + ", privilege=" + this.privilege + "]";
 	}
 }

@@ -9,12 +9,16 @@ package nl.hypothermic.foscamlib.containers;
 public class LocalAlarmRecordConfig {
 	
 	/** Is local alarm-record enabled (0-1) */
-	public final String isEnabled;
+	public String isEnabled;
 	/** Record duration in seconds */
-	public final String recordSecs;
+	public String recordSecs;
 	
-	public LocalAlarmRecordConfig(final String isEnabled, final String recordSecs) {
+	public LocalAlarmRecordConfig(String isEnabled, String recordSecs) {
 		this.isEnabled = isEnabled;
 		this.recordSecs = recordSecs;
+	}
+
+	@Override public String toString() {
+		return "LocalAlarmRecordConfig [isEnabled=" + this.isEnabled + ", recordSecs=" + this.recordSecs + "]";
 	}
 }

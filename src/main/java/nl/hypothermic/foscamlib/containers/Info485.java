@@ -11,17 +11,17 @@ public class Info485 {
 	// I would've rather named this class '485Info'. rip.
 	
 	/** rs485 protocol */
-	public final String protocol;
+	public String protocol;
 	/** rs485 address */
-	public final String address;
+	public String address;
 	/** rs485 baud rate */
-	public final String baudRate;
+	public String baudRate;
 	/** rs485 data bit */
-	public final String dataBit;
+	public String dataBit;
 	/** rs485 stop bit */
-	public final String stopBit;
+	public String stopBit;
 	/** rs485 parity check */
-	public final String parity;
+	public String parity;
 
 	/** Constructor for a new Info485 instance.
 	 * @param protocol = Protocol
@@ -31,13 +31,16 @@ public class Info485 {
 	 * @param stopBit = Stop bit
 	 * @param parity = Parity check
 	 */
-	public Info485(final String protocol, final String address, final String baudRate,
-				   final String dataBit, final String stopBit, final String parity) {
+	public Info485(String protocol, String address, String baudRate, String dataBit, String stopBit, String parity) {
 		this.protocol = protocol;
 		this.address = address;
 		this.baudRate = baudRate;
 		this.dataBit = dataBit;
 		this.stopBit = stopBit;
 		this.parity = parity;
+	}
+
+	@Override public String toString() {
+		return "Info485 [protocol=" + this.protocol + ", address=" + this.address + ", baudRate=" + this.baudRate + ", dataBit=" + this.dataBit + ", stopBit=" + this.stopBit + ", parity=" + this.parity + "]";
 	}
 }

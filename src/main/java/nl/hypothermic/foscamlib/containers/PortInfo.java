@@ -10,17 +10,21 @@ public class PortInfo {
 	
 	// Store ports in Strings, not as ints, because we will send them in String format as well.
 	// Names are the same as in the User Guide.
-	public final String webPort;
-	public final String httpsPort;
-	public final String mediaPort;
-	public final String onvifPort;
-	public final String rtspPort;
+	public String webPort;
+	public String httpsPort;
+	public String mediaPort;
+	public String onvifPort;
+	public String rtspPort;
 
-	public PortInfo(final String webPort, final String httpsPort, final String mediaPort, final String onvifPort, final String rtspPort) {
+	public PortInfo(String webPort, String httpsPort, String mediaPort, String onvifPort, String rtspPort) {
 		this.webPort = webPort;
 		this.httpsPort = httpsPort;
 		this.mediaPort = mediaPort;
 		this.onvifPort = onvifPort;
 		this.rtspPort = rtspPort;
+	}
+
+	@Override public String toString() {
+		return "PortInfo [webPort=" + this.webPort + ", httpsPort=" + this.httpsPort + ", mediaPort=" + this.mediaPort + ", onvifPort=" + this.onvifPort + ", rtspPort=" + this.rtspPort + "]";
 	}
 }

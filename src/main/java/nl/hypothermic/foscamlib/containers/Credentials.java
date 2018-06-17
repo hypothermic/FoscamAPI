@@ -8,11 +8,15 @@ package nl.hypothermic.foscamlib.containers;
 
 public class Credentials {
 	
-	public final String user;
-	public final String password;
+	public String user;
+	public String password;
 
-	public Credentials(final String user, final String password) {
+	public Credentials(String user, String password) {
 		this.user = user;
 		this.password = password;
+	}
+
+	@Override public String toString() {
+		return "Credentials [user=" + this.user + ", password=" + this.password + "]";
 	}
 }

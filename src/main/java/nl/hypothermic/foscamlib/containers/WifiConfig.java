@@ -11,7 +11,7 @@ import nl.hypothermic.foscamlib.containers.AccessPoint.EncryptType;
 public class WifiConfig {
 	
 	// Most javadoc comments are directly from the user guide. I chose not to change them even though the grammar isn't always correct.
-	
+
 	/** Enable state */
 	public boolean isEnabled;
 	/** Use wifi or not */
@@ -195,5 +195,9 @@ public class WifiConfig {
 	        }
 	        return null;
 	    }
+	}
+
+	@Override public String toString() {
+		return "WifiConfig [isEnabled=" + this.isEnabled + ", isUseWifi=" + this.isUseWifi + ", isConnected=" + this.isConnected + ", connectedAP=" + this.connectedAP + ", ssid=" + this.ssid + ", netType=" + this.netType + ", encryptType=" + this.encryptType + ", psk=" + this.psk + ", authMode=" + this.authMode + ", keyFormat=" + this.keyFormat + ", defaultKey=" + this.defaultKey + ", key1=" + this.key1 + ", key1Len=" + this.key1Len + ", key2=" + this.key2 + ", key2Len=" + this.key2Len + ", key3=" + this.key3 + ", key3Len=" + this.key3Len + ", key4=" + this.key4 + ", key4Len=" + this.key4Len + "]";
 	}
 }

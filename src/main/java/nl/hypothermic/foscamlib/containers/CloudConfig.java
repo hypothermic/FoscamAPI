@@ -11,15 +11,15 @@ public class CloudConfig {
 	// Javadoc comments are directly from the user guide
 	
 	/** Is cloud enabled (0-1) */
-	public final String isEnabled;
+	public String isEnabled;
 	/** Status message from cloud server <br><b>NOTE: </b> Call testCloudServer() to find this */
 	public String statusMsg;
 	/** Current cloud server */
-	public final CloudServer server;
+	public CloudServer server;
 	/** Authorization addr to server */
 	public String authAddr;
 	/** Authorization code from server */
-	public final String authCode;
+	public String authCode;
 	/** Access Token from authorization code <br><b>NOTE: </b> Call refreshCloudToken() to find this */
 	public String accessToken;
 	/** Cloud storage total size <br><b>NOTE: </b> Call refreshCloudQuota() to find this */
@@ -27,14 +27,14 @@ public class CloudConfig {
 	/** Cloud storage userd size <br><b>NOTE: </b> Call refreshCloudQuota() to find this */
 	public String userd;
 	
-	public CloudConfig(final String isEnabled, final CloudServer server, final String authCode) {
+	public CloudConfig(String isEnabled, CloudServer server, String authCode) {
 		this.isEnabled = isEnabled;
 		this.server = server;
 		this.authCode = authCode;
 	}
 	
-	public CloudConfig(final String isEnabled, final CloudServer server, final String authCode, final String authAddr, 
-					   final String accessToken, final String quota, final String userd, final String statusMsg) {
+	public CloudConfig(String isEnabled, CloudServer server, String authCode, String authAddr, 
+					   String accessToken, String quota, String userd, String statusMsg) {
 		this.isEnabled = isEnabled;
 		this.server = server;
 		this.authCode = authCode;
@@ -78,5 +78,9 @@ public class CloudConfig {
 			if (value.contains("2")) return BAIDU;
 			return null;
 		}
+	}
+
+	@Override public String toString() {
+		return "CloudConfig [isEnabled=" + this.isEnabled + ", statusMsg=" + this.statusMsg + ", server=" + this.server + ", authAddr=" + this.authAddr + ", authCode=" + this.authCode + ", accessToken=" + this.accessToken + ", quota=" + this.quota + ", userd=" + this.userd + "]";
 	}
 }

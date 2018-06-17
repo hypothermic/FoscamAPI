@@ -1,5 +1,7 @@
 package nl.hypothermic.foscamlib.containers;
 
+import java.util.Arrays;
+
 /******************************\
  * > MotionDetectScheduleMap  *
  * FoscamLib by hypothermic	  *
@@ -63,5 +65,9 @@ public class MotionDetectScheduleMap {
 		}
 		schedulemap[x][y] = state ? 1 : 0;
 		return true;
+	}
+
+	@Override public String toString() {
+		return "MotionDetectScheduleMap [schedulemap=" + Arrays.toString(this.schedulemap) + "]";
 	}
 }

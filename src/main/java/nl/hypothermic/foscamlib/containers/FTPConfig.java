@@ -11,15 +11,17 @@ import java.net.URLEncoder;
 public class FTPConfig {
 	
 	/** Full FTP server address with "ftp://" protocol and optional subdirs */
-	public final String ftpAddr;
+	public String ftpAddr;
 	/** Port of FTP server. */
-	public final String ftpPort;
+	public String ftpPort;
 	/** FTP Mode: 0=PASV, 1=PORT */
-	public final String mode;
+	public String mode;
 
 	// What the fuck Foscam? Why is a password visible with only visitor permissions?
-	public final String userName;
-	public final String password;
+	/** Username */
+	public String userName;
+	/** Password */
+	public String password;
 	
 	/** Construct a FTPConfig
 	 * @param ftpAddr = FTP address
@@ -28,7 +30,7 @@ public class FTPConfig {
 	 * @param userName = FTP user name
 	 * @param password = Password of FTP user
 	 */
-	public FTPConfig(final String ftpAddr, final String ftpPort, final String mode, final String userName, final String password) {
+	public FTPConfig(String ftpAddr, String ftpPort, String mode, String userName, String password) {
 		this.ftpAddr = ftpAddr;
 		this.ftpPort = ftpPort;
 		this.mode = mode;
@@ -43,7 +45,7 @@ public class FTPConfig {
 	 * @param userName = FTP user name
 	 * @param password = Password of FTP user
 	 */
-	public FTPConfig(final String ftpAddr, final String ftpPort, final FTPMode mode, final String userName, final String password) {
+	public FTPConfig(String ftpAddr, String ftpPort, FTPMode mode, String userName, String password) {
 		this.ftpAddr = ftpAddr;
 		this.ftpPort = ftpPort;
 		this.mode = mode.getValue() + "";
@@ -71,5 +73,9 @@ public class FTPConfig {
 		public int getValue() {
 			return this.value;
 		}
+	}
+
+	@Override public String toString() {
+		return "FTPConfig [ftpAddr=" + this.ftpAddr + ", ftpPort=" + this.ftpPort + ", mode=" + this.mode + ", userName=" + this.userName + ", password=" + this.password + "]";
 	}
 }

@@ -9,22 +9,26 @@ package nl.hypothermic.foscamlib.containers;
 public class OSDSettings {
 	
 	/** Is time stamp shown on OSD */
-	public final String isEnableTimeStamp;
+	public String isEnableTimeStamp;
 	/** Warning: unofficial feature. Not in the user guide.
 	Might not work on all devices. */
-	public final String isEnableTempAndHumid;
+	public String isEnableTempAndHumid;
 	/** Is camera name on OSD */
-	public final String isEnableDevName;
+	public String isEnableDevName;
 	/** "OSD display position, currently can only be 0" */
-	public final String dispPos;
+	public String dispPos;
 	/** Is OSD mask effective */
-	public final String isEnableOSDMask;
+	public String isEnableOSDMask;
 	
-	public OSDSettings(final String isEnableTimeStamp, final String isEnableTempAndHumid, final String isEnableDevName, final String dispPos, final String isEnableOSDMask) {
+	public OSDSettings(String isEnableTimeStamp, String isEnableTempAndHumid, String isEnableDevName, String dispPos, String isEnableOSDMask) {
 		this.isEnableTimeStamp = isEnableTimeStamp;
 		this.isEnableTempAndHumid = isEnableTempAndHumid;
 		this.isEnableDevName = isEnableDevName;
 		this.dispPos = dispPos;
 		this.isEnableOSDMask = isEnableOSDMask;
+	}
+
+	@Override public String toString() {
+		return "OSDSettings [isEnableTimeStamp=" + this.isEnableTimeStamp + ", isEnableTempAndHumid=" + this.isEnableTempAndHumid + ", isEnableDevName=" + this.isEnableDevName + ", dispPos=" + this.dispPos + ", isEnableOSDMask=" + this.isEnableOSDMask + "]";
 	}
 }

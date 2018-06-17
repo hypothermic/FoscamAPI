@@ -8,23 +8,23 @@ package nl.hypothermic.foscamlib.containers;
 
 public class DeviceInfo {
 	
-	public final String productName;
-	public final String serialNo;
-	public final String name;
-	public final String macAddr;
-	public final String year;
-	public final String month;
-	public final String day;
-	public final String hour;
-	public final String minute;
-	public final String second;
-	public final String timeZone;
-	public final String firmwareVer;
-	public final String hardwareVer;
+	public String productName;
+	public String serialNo;
+	public String name;
+	public String macAddr;
+	public String year;
+	public String month;
+	public String day;
+	public String hour;
+	public String minute;
+	public String second;
+	public String timeZone;
+	public String firmwareVer;
+	public String hardwareVer;
 
-	public DeviceInfo(final String productName, final String serialNo, final String name, final String macAddr, final String year,
-					  final String month, final String day, final String hour, final String minute, final String second, final String timeZone,
-					  final String firmwareVer, final String hardwareVer) {
+	public DeviceInfo(String productName, String serialNo, String name, String macAddr, String year,
+					  String month, String day, String hour, String minute, String second, String timeZone,
+					  String firmwareVer, String hardwareVer) {
 		this.productName = productName;
 		this.serialNo = serialNo;
 		this.name = name;
@@ -38,5 +38,9 @@ public class DeviceInfo {
 		this.timeZone = timeZone;
 		this.firmwareVer = firmwareVer;
 		this.hardwareVer = hardwareVer;
+	}
+
+	@Override public String toString() {
+		return "DeviceInfo [productName=" + this.productName + ", serialNo=" + this.serialNo + ", name=" + this.name + ", macAddr=" + this.macAddr + ", year=" + this.year + ", month=" + this.month + ", day=" + this.day + ", hour=" + this.hour + ", minute=" + this.minute + ", second=" + this.second + ", timeZone=" + this.timeZone + ", firmwareVer=" + this.firmwareVer + ", hardwareVer=" + this.hardwareVer + "]";
 	}
 }
