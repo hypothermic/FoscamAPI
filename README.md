@@ -1,6 +1,6 @@
 # FoscamAPI
 Easily connect to Foscam IP cameras with this lightweight Java library. One command is all it takes.  
-FoscamAPI is suitable for all the IP cameras, including FI9821W, FI9818W, FI9801W, FI9802W, FI9805W and FosBaby P1.  
+FoscamAPI is suitable for all the IP cameras, including but not limited to FI9821W, FI9818W, FI9801W, FI9802W, FI9805W, FI9900P and FosBaby P1.  
 It is tested on the FI9900P.  
 More details are on [the pages](https://hypothermic.github.io/FoscamAPI/).
 
@@ -73,6 +73,9 @@ Here is a full list of commands:
 - getNetworkDNSSecondary();
 - getURL();
 - getInterfaceURL();
+
+- getIPConfig();
+- setIPConfig();
 
 - getPortInfo();
     - getWebPort();
@@ -169,6 +172,7 @@ Here is a full list of commands:
 - deleteAccount(...);
 - changePassword(...);
 - changeUsername(...);
+- getUserPrivilege();
 - getUserList();
 - getUserListWithIndexes();
 - getSessionList();
@@ -246,6 +250,12 @@ Here is a full list of commands:
 See [javadoc](https://hypothermic.nl/foscamlib/javadoc/) for more information and details about these features.
 
 ## Changelog
+v1.09
+- Added IPConfig controls and container
+- Added getUserPrivilege()
+- Added NetUtil class
+- Fixed enum: Privilege
+
 v1.08
 - Added cloud controls
 - Added push controls

@@ -15,4 +15,8 @@ public class RxData {
 		this.result = result;
 		this.xml = xml;
 	}
+
+	@Override public String toString() {
+		return "RxData [result=" + this.result + ", xml=" + this.xml + "]";
+	}
 }

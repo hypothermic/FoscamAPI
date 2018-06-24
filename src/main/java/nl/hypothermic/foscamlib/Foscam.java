@@ -9,11 +9,13 @@ import java.util.List;
 
 import nl.hypothermic.foscamlib.containers.AccessPoint;
 import nl.hypothermic.foscamlib.containers.Account;
+import nl.hypothermic.foscamlib.containers.Account.Privilege;
 import nl.hypothermic.foscamlib.containers.CloudConfig;
 import nl.hypothermic.foscamlib.containers.CloudConfig.CloudServer;
 import nl.hypothermic.foscamlib.containers.Credentials;
 import nl.hypothermic.foscamlib.containers.DeviceInfo;
 import nl.hypothermic.foscamlib.containers.FTPConfig;
+import nl.hypothermic.foscamlib.containers.IPConfig;
 import nl.hypothermic.foscamlib.containers.Info485;
 import nl.hypothermic.foscamlib.containers.LocalAlarmRecordConfig;
 import nl.hypothermic.foscamlib.containers.OSDSettings;
@@ -46,6 +48,7 @@ import nl.hypothermic.foscamlib.exception.ConnectException;
 import nl.hypothermic.foscamlib.net.NetExecutor;
 import nl.hypothermic.foscamlib.net.NetManager;
 import nl.hypothermic.foscamlib.net.NetParser;
+import nl.hypothermic.foscamlib.net.NetUtil;
 
 /******************************\
  * > Foscam.java			< *
@@ -2328,6 +2331,71 @@ public class Foscam {
 	 */
 	public String getInterfaceURL() {
 		return protocol + "://" + address + ":" + port + "/cgi-bin/CGIProxy.fcgi";
+	}
+	
+	/** 
+	 * Set Foscam's IP config
+	 * <br><br><b>NOTE: </b> Camera will automatically REBOOT after calling this command. Experienced users only, wrong input data can lead to camera disconnecting from network.
+	 * @param ipc IPConfig object
+	 * @return True if succeeded
+	 */
+	public Boolean setIPConfig(final IPConfig ipc) {
+		RxData out = nm.exec("setIpInfo", new HashMap<String, String>() 
+										{{
+											 put("isDHCP", "" + (ipc.isDHCP ? 1 : 0));
+											 put("ip", ipc.ip);
+											 put("gate", ipc.gate);
+											 put("mask", ipc.mask);
+											 put("dns1", ipc.dns1);
+											 put("dns2", ipc.dns2);
+										}});
+		return out.result == Result.SUCCESS;
+	}
+	
+	/** 
+	 * Get Foscam's IP configuration
+	 * @return IPConfig object, null if error occurred
+	 */
+	public IPConfig getIPConfig() {
+		RxData out = nm.exec("getIPInfo", null);
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		return new IPConfig(p.getTagValue(out.xml, "isDHCP").contains("1"), p.getTagValue(out.xml, "ip"), p.getTagValue(out.xml, "gate"), p.getTagValue(out.xml, "mask"), p.getTagValue(out.xml, "dns1"), p.getTagValue(out.xml, "dns2"));
+	}
+	
+	/**
+	 * Get privilege of user.
+	 * @param username Username of target user
+	 * @param password Password of target user
+	 * @return Privilege instance
+	 */
+	public Privilege getUserPrivilege(final String username, final String password) {
+		String ip;
+		try {
+			ip = NetUtil.getConnectedSubnet().toString();
+		} catch (IOException x) {
+			ip = null;
+			x.printStackTrace();
+		}
+		final String machineIp = ip.replaceAll("/", "");
+		RxData out = nm.exec("logIn", new HashMap<String, String>() 
+		{{
+			 put("usrName", username);
+			 put("remoteIp", machineIp);
+			 put("groupId", System.currentTimeMillis() + "");
+			 put("pwd", password);
+		}});
+		if (out.result != Result.SUCCESS) {
+			return null;
+		}
+		nm.exec("logOut", new HashMap<String, String>() 
+		{{
+			 put("usrName", username);
+			 put("ip", machineIp);
+			 put("groupId", System.currentTimeMillis() + "");
+		}});
+		return Privilege.match(p.getTagValue(out.xml, "privilege"));
 	}
 	
 	// ------- METHODS UNDER HERE ARE PLATFORM DEPENDENT, MIGHT NOT WORK FOR ALL PLATFORMS ------- //

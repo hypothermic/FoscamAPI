@@ -34,7 +34,7 @@ public class Account {
 	public static enum Privilege {
 		VISITOR(0),
 		OPERATOR(1),
-		ADMINISTRATOR(1);
+		ADMINISTRATOR(2);
 		
 		private final int value;
 		
@@ -48,6 +48,25 @@ public class Account {
 		 */
 		public int getValue() {
 			return this.value;
+		}
+		
+		public static Privilege match(int x) {
+	        switch(x) {
+	        case 0:
+	            return VISITOR;
+	        case 1:
+	            return OPERATOR;
+	        case 2:
+	            return ADMINISTRATOR;
+	        }
+	        return null;
+	    }
+
+		public static Privilege match(String value) {
+			if (value.contains("0")) return VISITOR;
+			if (value.contains("1")) return OPERATOR;
+			if (value.contains("2")) return ADMINISTRATOR;
+			return null;
 		}
 	}
 
