@@ -2478,7 +2478,9 @@ public class Foscam {
 		}
 		return new CloudConfig(p.getTagValue(out.xml, "isEnable"), CloudServer.match(p.getTagValue(out.xml, "cloudServer")), 
 							   p.getTagValue(out.xml, "code"), p.getTagValue(out.xml, "authAddr"), p.getTagValue(out.xml, "accessToken"), 
-							   p.getTagValue(out.xml, "quota"), p.getTagValue(out.xml, "userd"), p.getTagValue(out.xml, "statusMsg"));
+							   p.getTagValue(out.xml, "quota"), 
+							   /*p.getTagValue(out.xml, "userd"),*/ "", // TODO: string not availible on all devices!!! more research needed 
+							   p.getTagValue(out.xml, "statusMsg"));
 	}
 	
 	/**

@@ -12,7 +12,8 @@ public class CloudConfig {
 	
 	/** Is cloud enabled (0-1) */
 	public String isEnabled;
-	/** Status message from cloud server <br><b>NOTE: </b> Call testCloudServer() to find this */
+	/** Status message from cloud server 
+	 * <br><b>NOTE: </b> Call testCloudServer() to find this */
 	public String statusMsg;
 	/** Current cloud server */
 	public CloudServer server;
@@ -20,11 +21,15 @@ public class CloudConfig {
 	public String authAddr;
 	/** Authorization code from server */
 	public String authCode;
-	/** Access Token from authorization code <br><b>NOTE: </b> Call refreshCloudToken() to find this */
+	/** Access Token from authorization code 
+	 * <br><b>NOTE: </b> Call refreshCloudToken() to find this */
 	public String accessToken;
-	/** Cloud storage total size <br><b>NOTE: </b> Call refreshCloudQuota() to find this */
+	/** Cloud storage total size 
+	 * <br><b>NOTE: </b> Call refreshCloudQuota() to find this */
 	public String quota;
-	/** Cloud storage userd size <br><b>NOTE: </b> Call refreshCloudQuota() to find this */
+	/** Cloud storage userd size 
+	 * <br><b>NOTE: </b> Call refreshCloudQuota() to find this 
+	 * <br><b>NOTE: </b> Temporarily disabled due to crashes on certain devices. See Foscam.java line 2482*/
 	public String userd;
 	
 	public CloudConfig(String isEnabled, CloudServer server, String authCode) {
